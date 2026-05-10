@@ -47,6 +47,16 @@ Or with individual fields: `host`, `port`, `database`, `user`, `password`, `ssl`
   "warehouse": "COMPUTE_WH", "database": "ANALYTICS", "schema": "PUBLIC" }
 ```
 
+## Activating a new connection
+
+When you create or modify a `.rk-conn.json` file, the server detects the change but does **not** automatically initialize the client. You must call the reconnect endpoint to activate it:
+
+```
+POST /api/connections/:id/reconnect
+```
+
+This initializes the client and re-materializes all reports that depend on it. Always call this after creating a new connection file.
+
 ## Linking models to connections
 
 Models reference a connection via the `connection` field:

@@ -1,6 +1,6 @@
 ---
 name: building-reportkit
-description: "Build and edit ReportKit reports, data models, and themes. Use when working with .rk.json, .rk-model.json, .rk-theme.json files, or when asked to create dashboards, charts, KPIs, or data visualizations."
+description: "REQUIRED before ANY change to .rk.json, .rk-model.json, .rk-conn.json, or .rk-theme.json files. Also use when asked to create or edit dashboards, reports, charts, KPIs, data tables, connections, models, or data visualizations. Always invoke this skill FIRST – read its workflow and rules before making changes."
 user-invocable: true
 ---
 
