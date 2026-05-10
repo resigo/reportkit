@@ -8,7 +8,7 @@ All warehouse drivers are optional – install only what you need.
 |------|---------|---------|--------|
 | `duckdb` | `duckdb` | `npm install duckdb` | Supported |
 | `bigquery` | `@google-cloud/bigquery` | `npm install @google-cloud/bigquery` | Supported |
-| `postgres` | `pg` | `npm install pg` | Coming soon |
+| `postgres` | `pg` | `npm install pg` | Supported |
 | `snowflake` | `snowflake-sdk` | `npm install snowflake-sdk` | Coming soon |
 
 Drivers are lazy-loaded at runtime. If a driver is missing, the server prints a clear install instruction. CSV seed files in `seeds/` are loaded into a built-in SQLite engine (no extra install needed).
@@ -31,14 +31,14 @@ Connection files live in `connections/`.
 ```
 Also supports inline `credentials` object instead of `keyFile`.
 
-### Coming soon
-
 **Postgres** (`connections/dwh-prod.rk-conn.json`):
 ```json
 { "id": "dwh-prod", "type": "postgres", "label": "DWH Prod",
   "connectionUrl": "postgres://user:pass@host:5432/mydb" }
 ```
 Or with individual fields: `host`, `port`, `database`, `user`, `password`, `ssl`.
+
+### Coming soon
 
 **Snowflake** (`connections/dwh-prod.rk-conn.json`):
 ```json
