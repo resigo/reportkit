@@ -1,0 +1,36 @@
+{
+  "name": "default",
+  "accent": "#0066FF",
+  "palette": [
+    "#0066FF",
+    "#7C3AED",
+    "#10B981",
+    "#F43F5E",
+    "#F59E0B"
+  ],
+  "panel": {
+    "border": "subtle",
+    "radius": "medium"
+  },
+  "charts": {
+    "strokeWidth": 2,
+    "pointRadius": 3,
+    "fillOpacity": 0.06,
+    "barRadius": 4,
+    "showGrid": true,
+    "showDots": false,
+    "showValues": false
+  },
+  "table": {
+    "compact": false,
+    "striped": true,
+    "pageSize": 10
+  },
+  "kpi": {
+    "valueSize": "xl"
+  },
+  "accents": {
+    "KPICard": "#000000"
+  },
+  "pageRows": 34
+}

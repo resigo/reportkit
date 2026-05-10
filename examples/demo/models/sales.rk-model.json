@@ -1,0 +1,53 @@
+{
+  "id": "sales",
+  "label": "Sales",
+  "table": "sales",
+  "description": "Product sales by region (loaded from seeds/sales.csv)",
+  "columns": [
+    "date",
+    "region",
+    "product",
+    "units",
+    "revenue"
+  ],
+  "dimensions": [
+    {
+      "id": "product",
+      "label": "Product",
+      "column": "product"
+    },
+    {
+      "id": "region",
+      "label": "Region",
+      "column": "region"
+    }
+  ],
+  "metrics": [
+    {
+      "id": "total_revenue",
+      "label": "Total Revenue",
+      "type": "aggregate",
+      "expression": "SUM(revenue)",
+      "format": "currency",
+      "unit": "$",
+      "status": "approved"
+    },
+    {
+      "id": "total_units",
+      "label": "Total Units",
+      "type": "aggregate",
+      "expression": "SUM(units)",
+      "format": "number",
+      "status": "approved"
+    },
+    {
+      "id": "avg_price",
+      "label": "Avg Price",
+      "type": "aggregate",
+      "expression": "ROUND(SUM(revenue) * 1.0 / SUM(units), 2)",
+      "format": "currency",
+      "unit": "$",
+      "status": "approved"
+    }
+  ]
+}

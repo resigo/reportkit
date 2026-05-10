@@ -1,0 +1,14 @@
+# OS
+.DS_Store
+Thumbs.db
+
+# Connections (contain credentials)
+examples/*/connections/*.rk-conn.json
+!examples/*/connections/*.example.rk-conn.json
+
+# dbt
+examples/*/dbt/target/
+examples/*/dbt/logs/
+examples/*/dbt/dev.duckdb
+examples/*/dbt/profiles.yml
+examples/*/dbt/.user.yml
