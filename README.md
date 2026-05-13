@@ -252,13 +252,13 @@ Reports are `.rk.json` files in `reports/`. The `id` field must match the filena
   "title": "Sales Dashboard",
   "description": "Product sales overview across regions",
   "theme": "default",
-  "variables": [
+  "filters": [
     {
-      "name": "$REGION",
+      "id": "region",
       "label": "Region",
       "uiType": "dropdown",
       "model": "sales",
-      "modelColumn": "region",
+      "column": "region",
       "default": "__all__"
     }
   ],
@@ -268,13 +268,13 @@ Reports are `.rk.json` files in `reports/`. The `id` field must match the filena
       "type": "model",
       "model": "sales",
       "metrics": ["total_revenue"],
-      "variables": { "$REGION": "region" }
+      "filterColumns": { "region": "region" }
     },
     {
       "id": "revenue_by_month",
       "type": "model",
       "model": "sales",
-      "sql": "SELECT substr(date, 1, 7) as month, SUM(revenue) as revenue FROM {{table}} WHERE true [[AND region = $REGION]] GROUP BY month ORDER BY month"
+      "sql": "SELECT substr(date, 1, 7) as month, SUM(revenue) as revenue FROM {{table}} WHERE true [[AND region = @region]] GROUP BY month ORDER BY month"
     }
   ],
   "layout": [
@@ -312,7 +312,7 @@ Data blocks define queries that panels reference by `id`.
   "model": "sales",
   "metrics": ["total_revenue", "total_units"],
   "dimensions": ["region"],
-  "variables": { "$DATE_RANGE": "date" }
+  "filterColumns": { "region": "region", "date_range": "date" }
 }
 ```
 
@@ -322,13 +322,13 @@ Data blocks define queries that panels reference by `id`.
   "id": "monthly_trend",
   "type": "model",
   "model": "sales",
-  "sql": "SELECT substr(date, 1, 7) as month, SUM(revenue) as revenue FROM {{table}} WHERE true [[AND region = $REGION]] GROUP BY month ORDER BY month"
+  "sql": "SELECT substr(date, 1, 7) as month, SUM(revenue) as revenue FROM {{table}} WHERE true [[AND region = @region]] GROUP BY month ORDER BY month"
 }
 ```
 
 - `{{table}}` is replaced with the model's table name at runtime
-- Place `$VAR` references in SQL WHERE clauses, wrap in `[[...]]` for optional filtering
-- For metric blocks, use `variables` map to specify which column each variable applies to
+- Place `@filter_id` references in SQL WHERE clauses, wrap in `[[...]]` for optional filtering
+- For metric blocks, use `filterColumns` to map filter IDs to column names
 - `metrics` and `sql` are mutually exclusive
 - `aggregate` collapses rows: `{ "revenue": "sum" }` – built-ins: `count`, `sum`, `avg`, `min`, `max`
 
@@ -394,28 +394,28 @@ Panels are placed on a **24-column grid** using four properties:
 
 Full width: `col: 1, span: 24`.
 
-## Variables (Filters)
+## Filters
 
-Variables add interactive filter controls to your report. They expand to **values** in SQL – you control the column and operator in each data block.
+Filters add interactive controls to your report. They expand to **values** in SQL – you control the column and operator in each data block.
 
 ```json
-"variables": [
+"filters": [
   {
-    "name": "$REGION",
+    "id": "region",
     "label": "Region",
     "uiType": "dropdown",
     "model": "sales",
-    "modelColumn": "region",
+    "column": "region",
     "default": "__all__"
   },
   {
-    "name": "$DATE_RANGE",
+    "id": "date_range",
     "label": "Date Range",
     "uiType": "daterange",
     "default": "__all__"
   },
   {
-    "name": "$PRICE",
+    "id": "price",
     "label": "Price",
     "uiType": "range",
     "min": 0,
@@ -430,12 +430,12 @@ Variables add interactive filter controls to your report. They expand to **value
 |---------|-------------|---------|
 | `dropdown` | Single-select populated from model or static values | `"__all__"` |
 | `multiselect` | Multi-select with checkboxes | `"__all__"` |
-| `daterange` | Date range picker – generates `$VAR_START` and `$VAR_END` | `"__all__"` or `"start,end"` |
-| `range` | Numeric slider – generates `$VAR_MIN` and `$VAR_MAX` | `"__all__"` or `"min,max"` |
+| `daterange` | Date range picker – use `@filter.start` and `@filter.end` | `"__all__"` or `"start,end"` |
+| `range` | Numeric slider – use `@filter.min` and `@filter.max` | `"__all__"` or `"min,max"` |
 | `text` | Free text input | `"__all__"` |
 | `toggle` | On/off toggle | `"true"` or `"false"` |
 
-Place `$VAR` references in SQL WHERE clauses. Wrap in `[[...]]` for optional filtering – the clause is removed when the variable is `__all__`. Set `"excludeNull": true` on a dropdown to hide null values.
+Place `@filter_id` references in SQL WHERE clauses. Wrap in `[[...]]` for optional filtering – the clause is removed when the filter is `__all__`. Set `"excludeNull": true` on a dropdown to hide null values.
 
 ## Themes
 

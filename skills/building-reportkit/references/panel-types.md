@@ -113,7 +113,6 @@ Area chart with gradient fill. Supports multi-series, stacking, and long-format 
 | `stack` | boolean \| string | | `true` for stacked multi-y areas. String pivots long-format data by that column. |
 | `xFormat` | string | | Axis label format tokens |
 | `color` | string | | Area color (single series; multi-series uses palette) |
-| `palette` | string[] | | Color palette for multi-series |
 | `formatY` | string | | d3-format specifier |
 | `referenceLines` | ReferenceLine[] | | Threshold lines |
 | `xLabel` / `yLabel` | string | | Axis titles |

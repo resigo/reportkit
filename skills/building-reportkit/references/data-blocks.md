@@ -14,7 +14,7 @@ Data blocks define how panels get their data. Each block runs a query and is ref
 | `select` | string[] | Declarative column list (builds `SELECT col1, col2 FROM {{table}}`) |
 | `metrics` | string[] | Metric ids from model.metrics[] (approved only). Mutually exclusive with `sql`. |
 | `dimensions` | string[] | Dimension ids from model.dimensions[] for GROUP BY |
-| `variables` | Record<string, string> | Variable-to-column mapping for metric blocks (see below) |
+| `filterColumns` | Record<string, string> | Maps filter IDs to column names on this block's table (keys = filter IDs, values = columns) |
 | `aggregate` | Record<string, string> | Post-filter aggregation – collapses rows into a single value |
 
 ## Writing data blocks
@@ -26,17 +26,21 @@ Data blocks define how panels get their data. Each block runs a query and is ref
 - For raw SQL without a model: use `type: "sql"` with `connection`
 - `metrics` and `sql` are mutually exclusive – never set both
 
-## Variables in SQL blocks
+## Filters in SQL blocks
 
-Place `$VAR` references directly in your SQL WHERE clauses. Wrap in `[[...]]` so the clause is removed when the variable is `__all__`. The variable expands to a **value** – you control the column and operator.
+Place `@filter_id` references directly in your SQL WHERE clauses. Wrap in `[[...]]` so the clause is removed when the filter is `__all__`. The filter expands to a **value** – you control the column and operator.
 
 ```sql
-SELECT * FROM {{table}} WHERE true [[AND country = $COUNTRY]] [[AND created_at >= $DATE_RANGE_START]]
+SELECT * FROM {{table}} WHERE true [[AND country = @country]] [[AND created_at >= @date_range.start]]
 ```
 
-## Variables in metric blocks
+Dot notation for compound types:
+- Daterange: `@filter.start`, `@filter.end`
+- Range: `@filter.min`, `@filter.max`
 
-Metric blocks don't have raw SQL. Use a `variables` map to specify how each variable applies:
+## Filters in metric blocks
+
+Metric blocks don't have raw SQL. Use `filterColumns` to map filter IDs to column names on the block's table:
 
 ```json
 {
@@ -44,7 +48,7 @@ Metric blocks don't have raw SQL. Use a `variables` map to specify how each vari
   "type": "model",
   "model": "orders",
   "metrics": ["total_revenue"],
-  "variables": { "$COUNTRY": "country", "$DATE_RANGE": "created_at" }
+  "filterColumns": { "country": "country", "date_range": "created_at" }
 }
 ```
 
@@ -90,14 +94,14 @@ Every data block with `type: "model"` must reference a registered model. If no m
 
 ## Examples
 
-**Metrics block with variable filtering (preferred for aggregations):**
+**Metrics block with filter binding (preferred for aggregations):**
 ```json
 {
   "id": "revenue_kpi",
   "type": "model",
   "model": "orders",
   "metrics": ["total_revenue"],
-  "variables": { "$REGION": "region" }
+  "filterColumns": { "region": "region" }
 }
 ```
 
@@ -112,13 +116,13 @@ Every data block with `type: "model"` must reference a registered model. If no m
 }
 ```
 
-**Raw SQL block with variable filtering:**
+**Raw SQL block with filter references:**
 ```json
 {
   "id": "monthly_trend",
   "type": "model",
   "model": "orders",
-  "sql": "SELECT date_trunc('month', created_at) as month, SUM(amount) as revenue FROM {{table}} WHERE true [[AND region = $REGION]] GROUP BY month ORDER BY month"
+  "sql": "SELECT date_trunc('month', created_at) as month, SUM(amount) as revenue FROM {{table}} WHERE true [[AND region = @region]] GROUP BY month ORDER BY month"
 }
 ```
 
@@ -128,7 +132,7 @@ Every data block with `type: "model"` must reference a registered model. If no m
   "id": "total_orders",
   "type": "model",
   "model": "orders",
-  "sql": "SELECT COUNT(*) as count FROM {{table}} WHERE true [[AND region = $REGION]]",
+  "sql": "SELECT COUNT(*) as count FROM {{table}} WHERE true [[AND region = @region]]",
   "aggregate": { "count": "count" }
 }
 ```

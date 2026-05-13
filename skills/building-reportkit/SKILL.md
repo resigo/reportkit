@@ -32,7 +32,7 @@ seeds/           # (optional) CSV files loaded into SQLite on startup
 3. Use the panel type reference in `references/panel-types.md` for available chart types and their fields
 4. Use the data block guide in `references/data-blocks.md` for query patterns
 
-**When building from pending instructions on a new report** (file id matches `report_\d+`): choose a short meaningful snake_case id (e.g. `monthly_revenue`), write to `reports/<new_id>.rk.json`, and delete the old file.
+**If the report has a temporary timestamp id** (matches `report_\d+`): choose a short meaningful snake_case id (e.g. `monthly_revenue`), write to `reports/<new_id>.rk.json`, and delete the old file.
 
 ### Verify after every edit (MANDATORY)
 
@@ -78,9 +78,8 @@ See `references/diagnostics.md` for response format and issue categories.
 
 ## Pending instructions
 
-`pendingInstructions` can appear at report-level or panel-level.
+`pendingInstructions` appears on panels.
 
-- **Report-level**: implement the report, then remove `pendingInstructions`. Don't copy instructions into `description`.
 - **Placeholder panel**: change `type` to `targetType`, add required fields, create data blocks, remove `pendingInstructions` and `targetType`.
 - **Existing panel**: apply requested changes, remove `pendingInstructions`. Keep the panel type.
 
@@ -97,10 +96,10 @@ See `references/diagnostics.md` for response format and issue categories.
 Detailed documentation is in the `references/` directory:
 
 - `references/panel-types.md` – all panel types with required/optional fields, style options, and defaults
-- `references/data-blocks.md` – writing data blocks, SQL templates, aggregate, variables
+- `references/data-blocks.md` – writing data blocks, SQL templates, aggregate, filters
 - `references/metrics.md` – metrics system (aggregate, ratio, derived), proposing and referencing metrics
 - `references/connectors.md` – warehouse connectors, connection file examples, query routing
-- `references/filters.md` – variable types (dropdown, multiselect, daterange, range, text, toggle) and SQL usage
+- `references/filters.md` – filter types (dropdown, multiselect, daterange, range, text, toggle) and SQL usage
 - `references/themes.md` – theme fields, style overrides, palette customization
 - `references/diagnostics.md` – health endpoint, issue categories, troubleshooting workflow
 - `references/schema-exploration.md` – search-tables API for discovering tables and columns; query API for validating SQL and previewing data

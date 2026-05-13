@@ -1,44 +1,44 @@
-# Variables Reference
+# Filters Reference
 
-Variables are interactive filter controls that expand to **values** in SQL. You control WHERE clauses explicitly using `$VAR` references and `[[...]]` optional clauses.
+Filters are interactive controls that expand to **values** in SQL. You control WHERE clauses explicitly using `@filter_id` references and `[[...]]` optional clauses.
 
-## Variable types (uiType)
+## Filter types (uiType)
 
 | Type | Description | Default value | SQL expansion |
 |------|-------------|---------------|---------------|
 | `dropdown` | Single-select dropdown | `"__all__"` | `'value'` |
 | `multiselect` | Multi-select checkboxes | `"__all__"` | `'val1', 'val2'` (for `IN`) |
-| `daterange` | Date range picker | `"__all__"` | `$VAR_START` / `$VAR_END` |
-| `range` | Numeric slider | `"__all__"` | `$VAR_MIN` / `$VAR_MAX` |
+| `daterange` | Date range picker | `"__all__"` | `@filter.start` / `@filter.end` |
+| `range` | Numeric slider | `"__all__"` | `@filter.min` / `@filter.max` |
 | `text` | Free text input | `"__all__"` | `'value'` |
 | `toggle` | On/off toggle | `"__all__"` | `'true'` or `'false'` |
 
-## Variable fields
+## Filter fields
 
 | Field | Type | Description |
 |-------|------|-------------|
-| `name` | string (required) | `$UPPER_SNAKE_CASE` name |
+| `id` | string (required) | `snake_case` identifier |
 | `label` | string (required) | Display label |
 | `uiType` | string (required) | UI control type (see above) |
 | `default` | string (required) | `"__all__"` for no filter |
 | `model` | string | Model id to populate options from |
-| `modelColumn` | string | Column to SELECT DISTINCT from (required when `model` is set) |
+| `column` | string | Column to SELECT DISTINCT from (populates dropdown/multiselect options) |
 | `source` | string | Raw SQL returning distinct values (single column) |
 | `connection` | string | Connection id for raw SQL source queries |
 | `values` | string[] | Static option list |
 | `excludeNull` | boolean | Exclude null values from options (default: `false`) |
-| `min` / `max` / `step` | number | For range variables only |
+| `min` / `max` / `step` | number | For range filters only |
 
 ## Examples
 
 **Dropdown (model-backed):**
 ```json
 {
-  "name": "$COUNTRY",
+  "id": "country",
   "label": "Country",
   "uiType": "dropdown",
   "model": "orders",
-  "modelColumn": "country",
+  "column": "country",
   "default": "__all__"
 }
 ```
@@ -46,7 +46,7 @@ Variables are interactive filter controls that expand to **values** in SQL. You 
 **Date range:**
 ```json
 {
-  "name": "$DATE_RANGE",
+  "id": "date_range",
   "label": "Date Range",
   "uiType": "daterange",
   "default": "__all__"
@@ -56,7 +56,7 @@ Variables are interactive filter controls that expand to **values** in SQL. You 
 **Range slider:**
 ```json
 {
-  "name": "$REVENUE",
+  "id": "revenue",
   "label": "Revenue",
   "uiType": "range",
   "min": 0,
@@ -69,7 +69,7 @@ Variables are interactive filter controls that expand to **values** in SQL. You 
 **Multiselect:**
 ```json
 {
-  "name": "$STATUS",
+  "id": "status",
   "label": "Status",
   "uiType": "multiselect",
   "values": ["active", "pending", "cancelled"],
@@ -77,24 +77,28 @@ Variables are interactive filter controls that expand to **values** in SQL. You 
 }
 ```
 
-## Using variables in SQL
+## Using filters in SQL
 
-Place `$VAR` directly in your SQL WHERE clauses. Wrap conditions in `[[...]]` so the clause is removed when the variable is `__all__`.
+Place `@filter_id` directly in your SQL WHERE clauses. Wrap conditions in `[[...]]` so the clause is removed when the filter is `__all__`.
 
 ```json
 {
   "id": "sales_data",
   "type": "model",
   "model": "orders",
-  "sql": "SELECT * FROM {{table}} WHERE true [[AND country = $COUNTRY]] [[AND created_at >= $DATE_RANGE_START AND created_at <= $DATE_RANGE_END]]"
+  "sql": "SELECT * FROM {{table}} WHERE true [[AND country = @country]] [[AND created_at >= @date_range.start AND created_at <= @date_range.end]]"
 }
 ```
 
-**Key advantage**: The same `$COUNTRY` variable can filter different columns in different blocks – one block uses `country = $COUNTRY`, another uses `event_country = $COUNTRY`.
+**Dot notation for compound filters:**
+- Daterange: `@filter.start` and `@filter.end`
+- Range: `@filter.min` and `@filter.max`
 
-## Using variables with metric blocks
+**Key advantage**: The same `@country` filter can filter different columns in different blocks – one block uses `country = @country`, another uses `event_country = @country`.
 
-Metric blocks (using `metrics`/`dimensions`, no raw SQL) use a `variables` map to specify which column each variable applies to:
+## Using filters with metric blocks
+
+Metric blocks (using `metrics`/`dimensions`, no raw SQL) use `filterColumns` to map filter IDs to column names on the block's table:
 
 ```json
 {
@@ -102,23 +106,59 @@ Metric blocks (using `metrics`/`dimensions`, no raw SQL) use a `variables` map t
   "type": "model",
   "model": "orders",
   "metrics": ["total_revenue"],
-  "variables": { "$COUNTRY": "country" }
+  "filterColumns": { "country": "country", "date_range": "created_at" }
 }
 ```
 
+Each key is a filter ID, each value is the column to filter on. The same filter can map to different columns in different blocks.
+
 ## Multiselect in SQL
 
-Use `IN ($VAR)` – the values expand to comma-separated quoted strings:
+Use `IN (@filter)` – the values expand to comma-separated quoted strings:
 
 ```sql
-WHERE true [[AND status IN ($STATUS)]]
+WHERE true [[AND status IN (@status)]]
 ```
 
-When `$STATUS` = `"active,pending"`, this becomes:
+When `status` = `"active,pending"`, this becomes:
 ```sql
 WHERE true AND status IN ('active', 'pending')
 ```
 
-## Model-backed variables need a connection
+## Model-backed filters need a connection
 
-When using `model`/`modelColumn`, the model must have a `connection` field so the options query runs on the correct warehouse.
+When using `model`/`column`, the model must have a `connection` field so the options query runs on the correct warehouse.
+
+## Panel-local filters
+
+Filters can be scoped to a single panel instead of the whole report. Define them on a layout item in `filters[]`:
+
+```json
+{
+  "id": "revenue_by_customer",
+  "type": "HorizontalBarChart",
+  "data": "revenue_by_customer",
+  "row": 1, "col": 1, "span": 12,
+  "filters": [
+    {
+      "id": "local_min_rev",
+      "label": "Min Revenue",
+      "uiType": "range",
+      "min": 0,
+      "max": 50000,
+      "step": 500,
+      "default": "__all__"
+    }
+  ]
+}
+```
+
+**UI behaviour:** The filter chips appear as a small overlay in the top-right corner of the panel when hovered – they are not shown in the global FilterBar. Changing a panel-local filter rematerializes only that panel's data block (not all blocks).
+
+**SQL usage:** Exactly the same as global filters – use `@filter_id` in SQL or `filterColumns` in metric blocks. The data block has no idea whether a filter is global or local.
+
+**When to use local vs global:**
+- Use **global** filters when the same filter should apply across multiple panels (e.g. `@country` filtering all panels).
+- Use **local** filters when a filter is specific to one panel and would clutter the top bar (e.g. a revenue range slider on a single chart).
+
+**ID uniqueness:** Filter IDs must be unique across the report – a local filter ID must not clash with any global filter ID.

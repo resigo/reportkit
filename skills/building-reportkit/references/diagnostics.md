@@ -85,6 +85,6 @@ When something is wrong (charts show "No data", panels look broken, etc.), **alw
 After health returns `healthy: true`, verify:
 - Every panel's x/y/value field matches a column in the data block's result
 - Sample data matches what was asked for
-- Variables are used: each variable name appears in at least one data block's SQL or `variables` map
+- Filters are used: each filter ID appears in at least one data block's SQL (`@filter_id`) or `filters` list
 - KPI cards have single-row results (use aggregate or LIMIT 1)
 - No double aggregation: if SQL has GROUP BY, don't also set `aggregate`
