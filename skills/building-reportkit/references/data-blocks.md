@@ -14,7 +14,7 @@ Data blocks define how panels get their data. Each block runs a query and is ref
 | `select` | string[] | Declarative column list (builds `SELECT col1, col2 FROM {{table}}`) |
 | `metrics` | string[] | Metric ids from model.metrics[] (approved only). Mutually exclusive with `sql`. |
 | `dimensions` | string[] | Dimension ids from model.dimensions[] for GROUP BY |
-| `filterBy` | string[] | Filter ids this block responds to |
+| `variables` | Record<string, string> | Variable-to-column mapping for metric blocks (see below) |
 | `aggregate` | Record<string, string> | Post-filter aggregation – collapses rows into a single value |
 
 ## Writing data blocks
@@ -26,13 +26,31 @@ Data blocks define how panels get their data. Each block runs a query and is ref
 - For raw SQL without a model: use `type: "sql"` with `connection`
 - `metrics` and `sql` are mutually exclusive – never set both
 
-## Filters and filterBy
+## Variables in SQL blocks
 
-`filterBy` lists which filter ids this block responds to. Only listed filters apply. The server automatically adds WHERE clauses – **never write filter logic in SQL**. No Jinja, no `{% if %}`, no conditional WHERE clauses.
+Place `$VAR` references directly in your SQL WHERE clauses. Wrap in `[[...]]` so the clause is removed when the variable is `__all__`. The variable expands to a **value** – you control the column and operator.
+
+```sql
+SELECT * FROM {{table}} WHERE true [[AND country = $COUNTRY]] [[AND created_at >= $DATE_RANGE_START]]
+```
+
+## Variables in metric blocks
+
+Metric blocks don't have raw SQL. Use a `variables` map to specify how each variable applies:
+
+```json
+{
+  "id": "revenue_kpi",
+  "type": "model",
+  "model": "orders",
+  "metrics": ["total_revenue"],
+  "variables": { "$COUNTRY": "country", "$DATE_RANGE": "created_at" }
+}
+```
 
 ## Aggregate
 
-Collapses filtered rows into a single result. Use for KPICards when no approved metric exists.
+Collapses rows into a single result. Use for KPICards when no approved metric exists.
 
 ```json
 { "aggregate": { "revenue": "sum" } }
@@ -72,14 +90,14 @@ Every data block with `type: "model"` must reference a registered model. If no m
 
 ## Examples
 
-**Metrics block (preferred for aggregations):**
+**Metrics block with variable filtering (preferred for aggregations):**
 ```json
 {
   "id": "revenue_kpi",
   "type": "model",
   "model": "orders",
   "metrics": ["total_revenue"],
-  "filterBy": ["region"]
+  "variables": { "$REGION": "region" }
 }
 ```
 
@@ -94,14 +112,13 @@ Every data block with `type: "model"` must reference a registered model. If no m
 }
 ```
 
-**Raw SQL block:**
+**Raw SQL block with variable filtering:**
 ```json
 {
   "id": "monthly_trend",
   "type": "model",
   "model": "orders",
-  "sql": "SELECT date_trunc('month', created_at) as month, SUM(amount) as revenue FROM {{table}} GROUP BY month ORDER BY month",
-  "filterBy": ["region"]
+  "sql": "SELECT date_trunc('month', created_at) as month, SUM(amount) as revenue FROM {{table}} WHERE true [[AND region = $REGION]] GROUP BY month ORDER BY month"
 }
 ```
 
@@ -111,8 +128,7 @@ Every data block with `type: "model"` must reference a registered model. If no m
   "id": "total_orders",
   "type": "model",
   "model": "orders",
-  "sql": "SELECT COUNT(*) as count FROM {{table}}",
-  "aggregate": { "count": "count" },
-  "filterBy": ["region"]
+  "sql": "SELECT COUNT(*) as count FROM {{table}} WHERE true [[AND region = $REGION]]",
+  "aggregate": { "count": "count" }
 }
 ```

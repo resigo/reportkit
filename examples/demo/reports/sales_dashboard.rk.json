@@ -5,22 +5,19 @@
   "description": "Product sales overview across regions",
   "theme": "default",
   "reviewMode": true,
-  "filters": [
+  "variables": [
     {
-      "id": "region",
+      "name": "$REGION",
       "label": "Region",
-      "column": "region",
+      "uiType": "dropdown",
       "model": "sales",
       "modelColumn": "region",
       "default": "__all__"
     },
     {
-      "id": "date",
+      "name": "$DATE_RANGE",
       "label": "Date",
-      "column": "date",
-      "type": "daterange",
-      "model": "sales",
-      "modelColumn": "date",
+      "uiType": "daterange",
       "default": "__all__"
     }
   ],
@@ -32,10 +29,10 @@
       "metrics": [
         "total_revenue"
       ],
-      "filterBy": [
-        "region",
-        "date"
-      ]
+      "variables": {
+        "$REGION": "region",
+        "$DATE_RANGE": "date"
+      }
     },
     {
       "id": "total_units",
@@ -44,10 +41,10 @@
       "metrics": [
         "total_units"
       ],
-      "filterBy": [
-        "region",
-        "date"
-      ]
+      "variables": {
+        "$REGION": "region",
+        "$DATE_RANGE": "date"
+      }
     },
     {
       "id": "avg_price",
@@ -56,30 +53,22 @@
       "metrics": [
         "avg_price"
       ],
-      "filterBy": [
-        "region",
-        "date"
-      ]
+      "variables": {
+        "$REGION": "region",
+        "$DATE_RANGE": "date"
+      }
     },
     {
       "id": "revenue_by_month",
       "type": "model",
       "model": "sales",
-      "sql": "SELECT substr(date, 1, 7) as month, SUM(revenue) as revenue FROM {{table}} GROUP BY month ORDER BY month",
-      "filterBy": [
-        "region",
-        "date"
-      ]
+      "sql": "SELECT substr(date, 1, 7) as month, SUM(revenue) as revenue FROM {{table}} WHERE true [[AND region = $REGION]] [[AND date >= $DATE_RANGE_START AND date <= $DATE_RANGE_END]] GROUP BY month ORDER BY month"
     },
     {
       "id": "revenue_trend_by_region",
       "type": "model",
       "model": "sales",
-      "sql": "SELECT substr(date, 1, 7) as month, region, SUM(revenue) as revenue FROM {{table}} GROUP BY month, region ORDER BY month",
-      "filterBy": [
-        "region",
-        "date"
-      ]
+      "sql": "SELECT substr(date, 1, 7) as month, region, SUM(revenue) as revenue FROM {{table}} WHERE true [[AND region = $REGION]] [[AND date >= $DATE_RANGE_START AND date <= $DATE_RANGE_END]] GROUP BY month, region ORDER BY month"
     },
     {
       "id": "revenue_by_product",
@@ -91,60 +80,40 @@
       "dimensions": [
         "product"
       ],
-      "filterBy": [
-        "region",
-        "date"
-      ]
+      "variables": {
+        "$REGION": "region",
+        "$DATE_RANGE": "date"
+      }
     },
     {
       "id": "share_by_region",
       "type": "model",
       "model": "sales",
-      "sql": "SELECT region, SUM(revenue) as revenue FROM {{table}} GROUP BY region ORDER BY revenue DESC",
-      "filterBy": [
-        "region",
-        "date"
-      ]
+      "sql": "SELECT region, SUM(revenue) as revenue FROM {{table}} WHERE true [[AND region = $REGION]] [[AND date >= $DATE_RANGE_START AND date <= $DATE_RANGE_END]] GROUP BY region ORDER BY revenue DESC"
     },
     {
       "id": "units_by_month",
       "type": "model",
       "model": "sales",
-      "sql": "SELECT substr(date, 1, 7) as month, SUM(units) as units FROM {{table}} GROUP BY month ORDER BY month",
-      "filterBy": [
-        "region",
-        "date"
-      ]
+      "sql": "SELECT substr(date, 1, 7) as month, SUM(units) as units FROM {{table}} WHERE true [[AND region = $REGION]] [[AND date >= $DATE_RANGE_START AND date <= $DATE_RANGE_END]] GROUP BY month ORDER BY month"
     },
     {
       "id": "product_scatter",
       "type": "model",
       "model": "sales",
-      "sql": "SELECT product, SUM(units) as units, SUM(revenue) as revenue FROM {{table}} GROUP BY product",
-      "filterBy": [
-        "region",
-        "date"
-      ]
+      "sql": "SELECT product, SUM(units) as units, SUM(revenue) as revenue FROM {{table}} WHERE true [[AND region = $REGION]] [[AND date >= $DATE_RANGE_START AND date <= $DATE_RANGE_END]] GROUP BY product"
     },
     {
       "id": "monthly_by_product",
       "type": "model",
       "model": "sales",
-      "sql": "SELECT substr(date, 1, 7) as month, product, SUM(revenue) as revenue FROM {{table}} GROUP BY month, product ORDER BY month",
-      "filterBy": [
-        "region",
-        "date"
-      ]
+      "sql": "SELECT substr(date, 1, 7) as month, product, SUM(revenue) as revenue FROM {{table}} WHERE true [[AND region = $REGION]] [[AND date >= $DATE_RANGE_START AND date <= $DATE_RANGE_END]] GROUP BY month, product ORDER BY month"
     },
     {
       "id": "detail",
       "type": "model",
       "model": "sales",
-      "sql": "SELECT date as Date, region as Region, product as Product, units as Units, revenue as Revenue FROM {{table}} ORDER BY date DESC",
-      "filterBy": [
-        "region",
-        "date"
-      ]
+      "sql": "SELECT date as Date, region as Region, product as Product, units as Units, revenue as Revenue FROM {{table}} WHERE true [[AND region = $REGION]] [[AND date >= $DATE_RANGE_START AND date <= $DATE_RANGE_END]] ORDER BY date DESC"
     }
   ],
   "pages": [

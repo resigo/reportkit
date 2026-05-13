@@ -6,10 +6,10 @@ All warehouse drivers are optional – install only what you need.
 
 | Type | Package | Install | Status |
 |------|---------|---------|--------|
-| `duckdb` | `duckdb` | `npm install duckdb` | Supported |
-| `bigquery` | `@google-cloud/bigquery` | `npm install @google-cloud/bigquery` | Supported |
-| `postgres` | `pg` | `npm install pg` | Supported |
-| `snowflake` | `snowflake-sdk` | `npm install snowflake-sdk` | Coming soon |
+| `duckdb` | `duckdb` | `npx @reportkit/cli install duckdb` | Supported |
+| `bigquery` | `@google-cloud/bigquery` | `npx @reportkit/cli install bigquery` | Supported |
+| `postgres` | `pg` | `npx @reportkit/cli install postgres` | Supported |
+| `snowflake` | `snowflake-sdk` | `npx @reportkit/cli install snowflake` | Coming soon |
 
 Drivers are lazy-loaded at runtime. If a driver is missing, the server prints a clear install instruction. CSV seed files in `seeds/` are loaded into a built-in SQLite engine (no extra install needed).
 

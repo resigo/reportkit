@@ -97,10 +97,10 @@ See `references/diagnostics.md` for response format and issue categories.
 Detailed documentation is in the `references/` directory:
 
 - `references/panel-types.md` – all panel types with required/optional fields, style options, and defaults
-- `references/data-blocks.md` – writing data blocks, SQL templates, aggregate, filterBy
+- `references/data-blocks.md` – writing data blocks, SQL templates, aggregate, variables
 - `references/metrics.md` – metrics system (aggregate, ratio, derived), proposing and referencing metrics
 - `references/connectors.md` – warehouse connectors, connection file examples, query routing
-- `references/filters.md` – filter types (select, daterange, range) and wiring
+- `references/filters.md` – variable types (dropdown, multiselect, daterange, range, text, toggle) and SQL usage
 - `references/themes.md` – theme fields, style overrides, palette customization
 - `references/diagnostics.md` – health endpoint, issue categories, troubleshooting workflow
-- `references/schema-exploration.md` – search-tables API for discovering tables and columns
+- `references/schema-exploration.md` – search-tables API for discovering tables and columns; query API for validating SQL and previewing data

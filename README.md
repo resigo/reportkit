@@ -48,7 +48,7 @@ Warehouse drivers are optional – install only what you need. If a driver is mi
 ### BigQuery
 
 ```bash
-npm install @google-cloud/bigquery
+npx @reportkit/cli install bigquery
 ```
 
 Service account keyfile:
@@ -95,7 +95,7 @@ Inline credentials object (for secret managers / CI):
 ### DuckDB
 
 ```bash
-npm install duckdb
+npx @reportkit/cli install duckdb
 ```
 
 Local file:
@@ -121,7 +121,7 @@ MotherDuck (`md:` paths are passed directly – no local file check):
 ### Postgres
 
 ```bash
-npm install pg
+npx @reportkit/cli install postgres
 ```
 
 Connection URL (simplest):
@@ -252,11 +252,11 @@ Reports are `.rk.json` files in `reports/`. The `id` field must match the filena
   "title": "Sales Dashboard",
   "description": "Product sales overview across regions",
   "theme": "default",
-  "filters": [
+  "variables": [
     {
-      "id": "region",
+      "name": "$REGION",
       "label": "Region",
-      "column": "region",
+      "uiType": "dropdown",
       "model": "sales",
       "modelColumn": "region",
       "default": "__all__"
@@ -268,14 +268,13 @@ Reports are `.rk.json` files in `reports/`. The `id` field must match the filena
       "type": "model",
       "model": "sales",
       "metrics": ["total_revenue"],
-      "filterBy": ["region"]
+      "variables": { "$REGION": "region" }
     },
     {
       "id": "revenue_by_month",
       "type": "model",
       "model": "sales",
-      "sql": "SELECT substr(date, 1, 7) as month, SUM(revenue) as revenue FROM {{table}} GROUP BY month ORDER BY month",
-      "filterBy": ["region"]
+      "sql": "SELECT substr(date, 1, 7) as month, SUM(revenue) as revenue FROM {{table}} WHERE true [[AND region = $REGION]] GROUP BY month ORDER BY month"
     }
   ],
   "layout": [
@@ -313,7 +312,7 @@ Data blocks define queries that panels reference by `id`.
   "model": "sales",
   "metrics": ["total_revenue", "total_units"],
   "dimensions": ["region"],
-  "filterBy": ["date_range"]
+  "variables": { "$DATE_RANGE": "date" }
 }
 ```
 
@@ -323,15 +322,15 @@ Data blocks define queries that panels reference by `id`.
   "id": "monthly_trend",
   "type": "model",
   "model": "sales",
-  "sql": "SELECT substr(date, 1, 7) as month, SUM(revenue) as revenue FROM {{table}} GROUP BY month ORDER BY month",
-  "filterBy": ["region"]
+  "sql": "SELECT substr(date, 1, 7) as month, SUM(revenue) as revenue FROM {{table}} WHERE true [[AND region = $REGION]] GROUP BY month ORDER BY month"
 }
 ```
 
 - `{{table}}` is replaced with the model's table name at runtime
-- `filterBy` lists which filter ids apply – the server generates WHERE clauses automatically
+- Place `$VAR` references in SQL WHERE clauses, wrap in `[[...]]` for optional filtering
+- For metric blocks, use `variables` map to specify which column each variable applies to
 - `metrics` and `sql` are mutually exclusive
-- `aggregate` collapses rows post-filter: `{ "revenue": "sum" }` – built-ins: `count`, `sum`, `avg`, `min`, `max`
+- `aggregate` collapses rows: `{ "revenue": "sum" }` – built-ins: `count`, `sum`, `avg`, `min`, `max`
 
 ### Multi-Page Reports
 
@@ -395,33 +394,30 @@ Panels are placed on a **24-column grid** using four properties:
 
 Full width: `col: 1, span: 24`.
 
-## Filters
+## Variables (Filters)
 
-Filters add interactive controls that automatically generate WHERE clauses across data blocks.
+Variables add interactive filter controls to your report. They expand to **values** in SQL – you control the column and operator in each data block.
 
 ```json
-"filters": [
+"variables": [
   {
-    "id": "region",
+    "name": "$REGION",
     "label": "Region",
-    "type": "select",
-    "column": "region",
+    "uiType": "dropdown",
     "model": "sales",
     "modelColumn": "region",
     "default": "__all__"
   },
   {
-    "id": "date_range",
+    "name": "$DATE_RANGE",
     "label": "Date Range",
-    "type": "daterange",
-    "column": "created_at",
+    "uiType": "daterange",
     "default": "__all__"
   },
   {
-    "id": "price",
+    "name": "$PRICE",
     "label": "Price",
-    "type": "range",
-    "column": "price",
+    "uiType": "range",
     "min": 0,
     "max": 1000,
     "step": 10,
@@ -430,15 +426,16 @@ Filters add interactive controls that automatically generate WHERE clauses acros
 ]
 ```
 
-| Type | Description | Default |
-|------|-------------|---------|
-| `select` | Dropdown populated from model or raw SQL | `"__all__"` |
-| `daterange` | Date range picker (`BETWEEN start AND end`) | `"__all__"` or `"start,end"` |
-| `range` | Numeric slider | `"__all__"` or `"min,max"` |
+| UI Type | Description | Default |
+|---------|-------------|---------|
+| `dropdown` | Single-select populated from model or static values | `"__all__"` |
+| `multiselect` | Multi-select with checkboxes | `"__all__"` |
+| `daterange` | Date range picker – generates `$VAR_START` and `$VAR_END` | `"__all__"` or `"start,end"` |
+| `range` | Numeric slider – generates `$VAR_MIN` and `$VAR_MAX` | `"__all__"` or `"min,max"` |
+| `text` | Free text input | `"__all__"` |
+| `toggle` | On/off toggle | `"true"` or `"false"` |
 
-Set `"excludeNull": true` on a filter to hide null values from the dropdown. By default, all values including nulls are shown.
-
-Data blocks opt in to filters via `"filterBy": ["region", "date_range"]`. Only listed filters apply.
+Place `$VAR` references in SQL WHERE clauses. Wrap in `[[...]]` for optional filtering – the clause is removed when the variable is `__all__`. Set `"excludeNull": true` on a dropdown to hide null values.
 
 ## Themes
 

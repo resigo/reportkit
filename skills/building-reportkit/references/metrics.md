@@ -19,7 +19,7 @@ Use `metrics` and `dimensions` arrays instead of raw SQL:
   "type": "model",
   "model": "stg_orders",
   "metrics": ["total_revenue"],
-  "filterBy": ["region"]
+  "variables": { "$REGION": "region" }
 }
 ```
 
