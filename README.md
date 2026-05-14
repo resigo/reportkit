@@ -487,13 +487,34 @@ Create a `.rk-theme.json` in `themes/` and reference it by name in your report's
 
 ## Agent Setup
 
-Install or update the Claude Code skill file so the agent can build and edit reports:
+ReportKit supports two AI agents for building and editing reports:
+
+| Agent | Install |
+|-------|---------|
+| **Claude Code** | `npm install -g @anthropic-ai/claude-code` |
+| **OpenAI Codex** | `npm install -g @openai/codex` |
+
+`npx @reportkit/cli init` auto-detects which agent is installed and installs the right skill file. To install or update manually:
 
 ```bash
 npx @reportkit/cli update-skills
 ```
 
-This copies the full skill (including reference docs) to `.claude/skills/building-reportkit/`.
+This copies the full skill (including reference docs) to `.claude/skills/building-reportkit/` (Claude Code) or `.agents/skills/building-reportkit/` (Codex).
+
+### Using the agent
+
+**Agent panel (recommended)** – open the sidebar in ReportKit and type a prompt. The panel runs the agent in the background and streams output inline.
+
+**Terminal** – point your agent at the `building-reportkit` skill and give it a prompt:
+
+```bash
+# Claude Code
+claude --skill building-reportkit "add a bar chart of revenue by month"
+
+# Codex
+codex --instructions .agents/skills/building-reportkit/SKILL.md "add a bar chart of revenue by month"
+```
 
 ## Deploying
 

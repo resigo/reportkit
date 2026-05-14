@@ -38,6 +38,8 @@ seeds/           # (optional) CSV files loaded into SQLite on startup
 
 You MUST run this loop after every report change. Do NOT consider the task done until `healthy: true`.
 
+The server runs on `http://localhost:3001` by default (or `PORT` env var, or `port` in `.reportkit/settings.yml`).
+
 1. `POST /api/reports/:id/check` – runs schema check, reference check, queries, and data diagnostics in one call
 2. Read the response:
    - `healthy: true` → done
