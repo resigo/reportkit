@@ -28,7 +28,7 @@ seeds/           # (optional) CSV files loaded into SQLite on startup
 ### Building a report
 
 1. Create or edit `reports/<id>.rk.json` – the `id` field must match the filename
-2. A report has four sections: metadata, filters, data blocks, and layout
+2. A report has four sections: metadata, filters, data blocks, and pages (each page has a layout)
 3. Use the panel type reference in `references/panel-types.md` for available chart types and their fields
 4. Use the data block guide in `references/data-blocks.md` for query patterns
 
@@ -65,8 +65,9 @@ See `references/diagnostics.md` for response format and issue categories.
   "reviewMode": true,
   "filters": [ /* see references/filters.md */ ],
   "data": [ /* see references/data-blocks.md */ ],
-  "layout": [ /* panels on a 24-column grid */ ],
-  "pages": [ /* optional multi-page: { id, title, layout: [...] } */ ]
+  "pages": [
+    { "id": "main", "title": "Overview", "layout": [ /* panels on a 24-column grid */ ] }
+  ]
 }
 ```
 

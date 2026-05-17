@@ -279,24 +279,30 @@ Reports are `.rk.json` files in `reports/`. The `id` field must match the filena
       "sql": "SELECT substr(date, 1, 7) as month, SUM(revenue) as revenue FROM {{table}} WHERE true [[AND region = @region]] GROUP BY month ORDER BY month"
     }
   ],
-  "layout": [
+  "pages": [
     {
-      "id": "kpi_revenue",
-      "type": "KPICard",
-      "title": "Total Revenue",
-      "data": "total_revenue",
-      "value": "total_revenue",
-      "unit": "$",
-      "row": 1, "col": 1, "span": 8, "height": 4
-    },
-    {
-      "id": "revenue_chart",
-      "type": "BarChart",
-      "title": "Revenue by Month",
-      "data": "revenue_by_month",
-      "x": "month",
-      "y": "revenue",
-      "row": 5, "col": 1, "span": 12, "height": 12
+      "id": "main",
+      "title": "Overview",
+      "layout": [
+        {
+          "id": "kpi_revenue",
+          "type": "KPICard",
+          "title": "Total Revenue",
+          "data": "total_revenue",
+          "value": "total_revenue",
+          "unit": "$",
+          "row": 1, "col": 1, "span": 8, "height": 4
+        },
+        {
+          "id": "revenue_chart",
+          "type": "BarChart",
+          "title": "Revenue by Month",
+          "data": "revenue_by_month",
+          "x": "month",
+          "y": "revenue",
+          "row": 5, "col": 1, "span": 12, "height": 12
+        }
+      ]
     }
   ]
 }
@@ -336,23 +342,14 @@ Data blocks define queries that panels reference by `id`.
 
 ### Multi-Page Reports
 
-Use `pages` for tabbed dashboards:
+Add more entries to `pages` for tabbed dashboards:
 
 ```json
 {
   "pages": [
-    {
-      "id": "overview",
-      "title": "Overview",
-      "layout": [ ... ]
-    },
-    {
-      "id": "details",
-      "title": "Details",
-      "layout": [ ... ]
-    }
-  ],
-  "layout": []
+    { "id": "overview", "title": "Overview", "layout": [ ... ] },
+    { "id": "details", "title": "Details", "layout": [ ... ] }
+  ]
 }
 ```
 
