@@ -1,0 +1,94 @@
+date,region,product,units,revenue
+2026-01-03,North,Batch Run Sneakers,18,2340
+2026-01-03,North,Fuzzy Match Socks,85,1275
+2026-01-03,West,Deadlock Laces,42,630
+2026-01-07,South,Batch Run Sneakers,22,2860
+2026-01-07,South,Fuzzy Match Socks,70,1050
+2026-01-07,North,Deadlock Laces,55,825
+2026-01-07,West,Batch Run Sneakers,30,3900
+2026-01-12,North,Fuzzy Match Socks,92,1380
+2026-01-12,West,Deadlock Laces,48,720
+2026-01-12,South,Batch Run Sneakers,15,1950
+2026-01-12,South,Deadlock Laces,38,570
+2026-01-18,North,Batch Run Sneakers,24,3120
+2026-01-18,West,Fuzzy Match Socks,110,1650
+2026-01-18,West,Batch Run Sneakers,35,4550
+2026-01-18,South,Fuzzy Match Socks,65,975
+2026-01-24,North,Deadlock Laces,60,900
+2026-01-24,North,Batch Run Sneakers,20,2600
+2026-01-24,West,Batch Run Sneakers,38,4940
+2026-01-24,South,Deadlock Laces,44,660
+2026-01-24,West,Fuzzy Match Socks,95,1425
+2026-01-29,South,Batch Run Sneakers,28,3640
+2026-01-29,North,Fuzzy Match Socks,78,1170
+2026-01-29,West,Deadlock Laces,52,780
+2026-02-02,North,Batch Run Sneakers,26,3380
+2026-02-02,South,Fuzzy Match Socks,72,1080
+2026-02-02,West,Batch Run Sneakers,40,5200
+2026-02-02,West,Deadlock Laces,56,840
+2026-02-06,North,Deadlock Laces,58,870
+2026-02-06,South,Batch Run Sneakers,20,2600
+2026-02-06,North,Fuzzy Match Socks,88,1320
+2026-02-06,West,Fuzzy Match Socks,105,1575
+2026-02-12,South,Fuzzy Match Socks,80,1200
+2026-02-12,North,Batch Run Sneakers,30,3900
+2026-02-12,West,Batch Run Sneakers,44,5720
+2026-02-12,South,Deadlock Laces,40,600
+2026-02-18,North,Fuzzy Match Socks,95,1425
+2026-02-18,West,Deadlock Laces,62,930
+2026-02-18,South,Batch Run Sneakers,25,3250
+2026-02-18,North,Deadlock Laces,50,750
+2026-02-24,West,Batch Run Sneakers,48,6240
+2026-02-24,South,Fuzzy Match Socks,68,1020
+2026-02-24,North,Batch Run Sneakers,22,2860
+2026-02-24,West,Fuzzy Match Socks,115,1725
+2026-02-24,South,Deadlock Laces,46,690
+2026-03-03,North,Batch Run Sneakers,32,4160
+2026-03-03,West,Batch Run Sneakers,52,6760
+2026-03-03,South,Fuzzy Match Socks,75,1125
+2026-03-03,North,Deadlock Laces,64,960
+2026-03-08,South,Batch Run Sneakers,28,3640
+2026-03-08,North,Fuzzy Match Socks,100,1500
+2026-03-08,West,Deadlock Laces,58,870
+2026-03-08,South,Deadlock Laces,42,630
+2026-03-14,North,Batch Run Sneakers,35,4550
+2026-03-14,West,Fuzzy Match Socks,120,1800
+2026-03-14,South,Batch Run Sneakers,30,3900
+2026-03-14,North,Fuzzy Match Socks,90,1350
+2026-03-14,West,Batch Run Sneakers,50,6500
+2026-03-20,South,Fuzzy Match Socks,82,1230
+2026-03-20,North,Deadlock Laces,68,1020
+2026-03-20,West,Batch Run Sneakers,55,7150
+2026-03-20,West,Deadlock Laces,65,975
+2026-03-20,South,Deadlock Laces,48,720
+2026-03-26,North,Batch Run Sneakers,38,4940
+2026-03-26,South,Batch Run Sneakers,32,4160
+2026-03-26,West,Fuzzy Match Socks,125,1875
+2026-03-26,North,Fuzzy Match Socks,98,1470
+2026-03-26,South,Fuzzy Match Socks,78,1170
+2026-04-02,West,Batch Run Sneakers,58,7540
+2026-04-02,North,Deadlock Laces,70,1050
+2026-04-02,South,Fuzzy Match Socks,85,1275
+2026-04-02,North,Batch Run Sneakers,40,5200
+2026-04-02,West,Deadlock Laces,68,1020
+2026-04-08,North,Fuzzy Match Socks,105,1575
+2026-04-08,South,Batch Run Sneakers,35,4550
+2026-04-08,West,Batch Run Sneakers,62,8060
+2026-04-08,North,Batch Run Sneakers,42,5460
+2026-04-08,South,Deadlock Laces,52,780
+2026-04-15,West,Fuzzy Match Socks,130,1950
+2026-04-15,North,Deadlock Laces,72,1080
+2026-04-15,South,Batch Run Sneakers,38,4940
+2026-04-15,West,Batch Run Sneakers,65,8450
+2026-04-15,North,Batch Run Sneakers,36,4680
+2026-04-21,South,Fuzzy Match Socks,90,1350
+2026-04-21,West,Deadlock Laces,70,1050
+2026-04-21,North,Batch Run Sneakers,45,5850
+2026-04-21,South,Batch Run Sneakers,40,5200
+2026-04-21,West,Fuzzy Match Socks,135,2025
+2026-04-27,North,Fuzzy Match Socks,110,1650
+2026-04-27,South,Deadlock Laces,55,825
+2026-04-27,West,Batch Run Sneakers,68,8840
+2026-04-27,North,Deadlock Laces,75,1125
+2026-04-27,South,Batch Run Sneakers,42,5460
+2026-04-27,West,Fuzzy Match Socks,140,2100

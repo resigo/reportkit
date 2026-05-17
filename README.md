@@ -51,7 +51,17 @@ Warehouse drivers are optional – install only what you need. If a driver is mi
 npx @reportkit/cli install bigquery
 ```
 
-Service account keyfile:
+**Local gcloud** – Application Default Credentials, mainly for local development. Run `gcloud auth application-default login` first (or rely on the attached service account when running on GCP):
+```json
+{
+  "id": "dwh-prod",
+  "type": "bigquery",
+  "label": "DWH Prod",
+  "project": "$BIGQUERY_PROJECT"
+}
+```
+
+**Key file** – path to a service account JSON file:
 ```json
 {
   "id": "dwh-prod",
@@ -62,17 +72,7 @@ Service account keyfile:
 }
 ```
 
-Application Default Credentials (omit `keyFile` – uses `gcloud auth application-default login` locally, or the attached service account on GCP):
-```json
-{
-  "id": "dwh-prod",
-  "type": "bigquery",
-  "label": "DWH Prod",
-  "project": "$BIGQUERY_PROJECT"
-}
-```
-
-Inline credentials object (for secret managers / CI):
+**Inline JSON** – paste the service account JSON directly (for secret managers / CI):
 ```json
 {
   "id": "dwh-prod",
@@ -91,6 +91,8 @@ Inline credentials object (for secret managers / CI):
   }
 }
 ```
+
+Optional fields: `dataset` (default dataset for table listing), `location` (e.g. `"US"`, `"EU"`).
 
 ### DuckDB
 
@@ -364,7 +366,6 @@ Use `pages` for tabbed dashboards:
 | `HorizontalBarChart` | Horizontal ranked bars | `x` (value), `y` (category) |
 | `ScatterChart` | Scatter with categorical color encoding | `x`, `y`, `colorBy` |
 | `PieChart` | Pie/donut chart | `label`, `value` |
-| `SparklineChart` | Compact inline sparkline | `x`, `y` |
 | `FunnelChart` | Funnel visualization | `label`, `value` |
 | `CohortChart` | Heatmap grid for retention analysis | `x`, `y`, `value` |
 | `CustomChart` | Agent-generated visx chart | `render` |
