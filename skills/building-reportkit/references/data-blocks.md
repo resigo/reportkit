@@ -93,7 +93,7 @@ Create a `.rk-model.json` file in `models/`. The `id` must match the filename.
 }
 ```
 
-Every column entry must be an object with both `name` and `description`. `description` is required – set it to `""` if there is nothing useful to say. Bare-string entries like `"col3"` are not allowed.
+Every column entry must be an object with both `name` and `description`. `description` is required – set it to `""` if there is no useful context. Bare-string entries like `"col3"` are not allowed.
 
 Every data block with `type: "model"` must reference a registered model. If no model exists for the data you need, create one first.
 
