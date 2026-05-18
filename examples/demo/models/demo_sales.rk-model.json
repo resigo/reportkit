@@ -4,11 +4,11 @@
   "table": "demo_sales",
   "description": "Demo sales data by region (loaded from seeds/demo_sales.csv)",
   "columns": [
-    { "name": "date", "description": "Date of the sales row (YYYY-MM-DD). Data runs from 2026-01-03 to 2026-04-27. Use for time-series charts and date truncation (week, month)." },
-    { "name": "region", "description": "Sales region. Values: North, South, West. Use for regional breakdowns and comparisons." },
-    { "name": "product", "description": "Product sold. Values: 'Batch Run Sneakers', 'Fuzzy Match Socks', 'Deadlock Laces'. Use for product-level performance analysis." },
-    { "name": "units", "description": "Number of units sold in this row. Integer. Aggregate with SUM for total volume metrics." },
-    { "name": "revenue", "description": "Revenue in USD for this row (integer, no decimals). Aggregate with SUM for total revenue. Derived from units × unit price per product." }
+    { "name": "date", "type": "date", "description": "Date of the sales row (YYYY-MM-DD). Data runs from 2026-01-03 to 2026-04-27. Use for time-series charts and date truncation (week, month)." },
+    { "name": "region", "type": "string", "description": "Sales region. Values: North, South, West. Use for regional breakdowns and comparisons." },
+    { "name": "product", "type": "string", "description": "Product sold. Values: 'Batch Run Sneakers', 'Fuzzy Match Socks', 'Deadlock Laces'. Use for product-level performance analysis." },
+    { "name": "units", "type": "number", "description": "Number of units sold in this row. Integer. Aggregate with SUM for total volume metrics." },
+    { "name": "revenue", "type": "number", "description": "Revenue in USD for this row (integer, no decimals). Aggregate with SUM for total revenue. Derived from units × unit price per product." }
   ],
   "dimensions": [
     {
