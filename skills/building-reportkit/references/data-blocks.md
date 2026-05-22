@@ -87,13 +87,13 @@ Create a `.rk-model.json` file in `models/`. The `id` must match the filename.
   "connection": "connection_id",
   "description": "What this source contains",
   "columns": [
-    { "name": "col1", "description": "Description of col1" },
-    { "name": "col2", "description": "Description of col2" }
+    { "name": "col1", "type": "date", "description": "Description of col1" },
+    { "name": "col2", "type": "number", "description": "Description of col2" }
   ]
 }
 ```
 
-Every column entry must be an object with both `name` and `description`. `description` is required – set it to `""` if there is no useful context. Bare-string entries like `"col3"` are not allowed.
+Every column entry must be an object with a `name` and a `description`. `description` is required – set it to `""` if there is no useful context. `type` is optional but recommended: the column's data type (e.g. `date`, `string`, `number`, `boolean`). Bare-string entries like `"col3"` are not allowed.
 
 Every data block with `type: "model"` must reference a registered model. If no model exists for the data you need, create one first.
 

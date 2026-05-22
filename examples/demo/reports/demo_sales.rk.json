@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "id": "sales_demo",
+  "id": "demo_sales",
   "title": "Demo Sales Dashboard",
   "description": "Product sales overview across regions",
   "theme": "default",

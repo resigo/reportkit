@@ -61,8 +61,17 @@ This initializes the client and re-materializes all reports that depend on it. A
 
 Models reference a connection via the `connection` field:
 ```json
-{ "id": "orders", "label": "Orders", "table": "public.orders",
-  "connection": "dwh-prod", "columns": ["id", "amount", "status"] }
+{
+  "id": "orders",
+  "label": "Orders",
+  "table": "public.orders",
+  "connection": "dwh-prod",
+  "columns": [
+    { "name": "id", "type": "number", "description": "Order ID" },
+    { "name": "amount", "type": "number", "description": "Order amount in USD" },
+    { "name": "status", "type": "string", "description": "Order status" }
+  ]
+}
 ```
 
 Data blocks with `type: "sql"` can also target a connection directly via `"connection": "dwh-prod"`.
