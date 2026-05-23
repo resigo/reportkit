@@ -62,6 +62,33 @@ Returns diagnostics for the last materialized state without re-running queries.
 - **requirement**: structural problems (placeholders, pending instructions, empty SQL, missing data refs, missing required fields, duplicate ids, invalid model/connection/metric/dimension references, unwired filters)
 - **data**: query problems (empty blocks, all-null columns, unmapped fields, type mismatches, KPI multi-row, excessive rows, failed filter options queries) – requires materialization first
 
+## Warnings (severity: warning)
+
+Warnings never flip `healthy` to `false`, but they flag reports that will look broken, mislead, or waste effort – treat them as a punch list and clear them. Each issue carries a `fix` string and, where useful, a `details` object with the raw numbers.
+
+**Visual** – the panel is mis-sized for what it draws:
+- **undersized** – panel `height` is below the recommended minimum for its type. Increase `height`.
+- **excessive_whitespace** – a large vertical gap between panels. Move panels up or fill the gap.
+- **orphan_data** – a data block no panel references. Add a panel that uses it, or remove the block.
+- **legend_overflow** – too narrow for the legend; chips wrap or overflow the right edge. Increase `span`, drop a series, or set `"showLegend": false`.
+- **legend_overlaps_plot** – the legend fits horizontally but sits on top of the data. Increase `span`, or hide the legend.
+- **axis_labels_overlap** – the x-axis (or a HorizontalBarChart's y-axis) has more distinct values than fit at the configured `labelAngle`. Rotate (`"chartStyle": { "labelAngle": -45 }`), format the column (`xFormat`), increase `span`/`height`, or aggregate to fewer ticks.
+- **y_ticks_crowded** – the chart is too short for a readable value axis; y labels stack. Increase `height`.
+
+The squeeze warnings (`legend_*`, `axis_labels_overlap`, `y_ticks_crowded`) put the raw numbers (`numSeries`, `iw`, `ih`, `numTicks`, `longestLabelChars`, `labelAngle`, `projectedPx`, `slotPx`, `recommendedSpan`, `recommendedRows`) in `details` so you can compute a fix without re-deriving them.
+
+**Requirement** – structural loose ends:
+- **instructions_pending** – a panel still has `pendingInstructions`. Apply the requested change, then remove the field.
+- **filter_unused** – a filter is defined but never referenced. Use `@filter_id` in a data block's SQL / `filterColumns`, or remove the filter.
+- **invalid_filter_ref / invalid_filter_model / invalid_filter_column** – a filter (or a block's `filterColumns`) points at a filter id, model, or column that doesn't exist. Fix the reference.
+
+**Data** – query output won't render as intended (requires materialization):
+- **excessive_rows** – a block returned a very large result set (likely a missing GROUP BY or bad join). Aggregate or LIMIT.
+- **y_not_numeric / kpi_not_numeric** – a y / KPI value column isn't numeric. Cast it in SQL or point at a numeric column.
+- **kpi_multiple_rows** – a KPI block returns more than one row (only the first shows). Aggregate or LIMIT 1.
+- **single_row_chart** – a chart block returned a single row. Remove the aggregate/LIMIT or add a GROUP BY.
+- **filter_options_empty** – a filter's options query returned nothing (dropdown shows only "All"). Check the query.
+
 ## Troubleshooting workflow
 
 When something is wrong (charts show "No data", panels look broken, etc.), **always check first**. Do NOT guess at the problem.
