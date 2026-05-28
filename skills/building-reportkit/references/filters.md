@@ -84,7 +84,6 @@ Place `@filter_id` directly in your SQL WHERE clauses. Wrap conditions in `[[...
 ```json
 {
   "id": "sales_data",
-  "type": "model",
   "model": "orders",
   "sql": "SELECT * FROM {{table}} WHERE true [[AND country = @country]] [[AND created_at >= @date_range.start AND created_at <= @date_range.end]]"
 }
@@ -103,7 +102,6 @@ Metric blocks (using `metrics`/`dimensions`, no raw SQL) use `filterColumns` to 
 ```json
 {
   "id": "revenue_kpi",
-  "type": "model",
   "model": "orders",
   "metrics": ["total_revenue"],
   "filterColumns": { "country": "country", "date_range": "created_at" }

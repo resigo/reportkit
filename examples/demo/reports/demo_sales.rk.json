@@ -24,7 +24,6 @@
   "data": [
     {
       "id": "total_revenue",
-      "type": "model",
       "model": "demo_sales",
       "metrics": [
         "total_revenue"
@@ -36,7 +35,6 @@
     },
     {
       "id": "total_units",
-      "type": "model",
       "model": "demo_sales",
       "metrics": [
         "total_units"
@@ -48,7 +46,6 @@
     },
     {
       "id": "avg_price",
-      "type": "model",
       "model": "demo_sales",
       "metrics": [
         "avg_price"
@@ -60,19 +57,16 @@
     },
     {
       "id": "revenue_by_month",
-      "type": "model",
       "model": "demo_sales",
       "sql": "SELECT substr(date, 1, 7) as month, SUM(revenue) as revenue FROM {{table}} WHERE true [[AND region = @region]] [[AND date >= @date_range.start AND date <= @date_range.end]] [[AND product = @panel_product]] GROUP BY month ORDER BY month"
     },
     {
       "id": "revenue_trend_by_region",
-      "type": "model",
       "model": "demo_sales",
       "sql": "SELECT substr(date, 1, 7) as month, region, SUM(revenue) as revenue FROM {{table}} WHERE true [[AND region = @region]] [[AND date >= @date_range.start AND date <= @date_range.end]] GROUP BY month, region ORDER BY month"
     },
     {
       "id": "revenue_by_product",
-      "type": "model",
       "model": "demo_sales",
       "metrics": [
         "total_revenue"
@@ -87,37 +81,31 @@
     },
     {
       "id": "share_by_region",
-      "type": "model",
       "model": "demo_sales",
       "sql": "SELECT region, SUM(revenue) as revenue FROM {{table}} WHERE true [[AND region = @region]] [[AND date >= @date_range.start AND date <= @date_range.end]] [[AND product = @panel_product_pie]] GROUP BY region ORDER BY revenue DESC"
     },
     {
       "id": "revenue_by_product_bar",
-      "type": "model",
       "model": "demo_sales",
       "sql": "SELECT product, SUM(revenue) as total_revenue FROM {{table}} WHERE true [[AND region = @region]] [[AND date >= @date_range.start AND date <= @date_range.end]] [[AND product = @panel_product_bar]] GROUP BY product ORDER BY total_revenue DESC"
     },
     {
       "id": "units_by_month",
-      "type": "model",
       "model": "demo_sales",
       "sql": "SELECT substr(date, 1, 7) as month, SUM(units) as units FROM {{table}} WHERE true [[AND region = @region]] [[AND date >= @date_range.start AND date <= @date_range.end]] GROUP BY month ORDER BY month"
     },
     {
       "id": "product_scatter",
-      "type": "model",
       "model": "demo_sales",
       "sql": "SELECT product, SUM(units) as units, SUM(revenue) as revenue FROM {{table}} WHERE true [[AND region = @region]] [[AND date >= @date_range.start AND date <= @date_range.end]] GROUP BY product"
     },
     {
       "id": "monthly_by_product",
-      "type": "model",
       "model": "demo_sales",
       "sql": "SELECT substr(date, 1, 7) as month, product, SUM(revenue) as revenue FROM {{table}} WHERE true [[AND region = @panel_region]] [[AND date >= @date_range.start AND date <= @date_range.end]] GROUP BY month, product ORDER BY month"
     },
     {
       "id": "detail",
-      "type": "model",
       "model": "demo_sales",
       "sql": "SELECT date as Date, region as Region, product as Product, units as Units, revenue as Revenue FROM {{table}} WHERE true [[AND region = @region]] [[AND date >= @date_range.start AND date <= @date_range.end]] ORDER BY date DESC"
     }
@@ -201,7 +189,6 @@
           "colors": [
             "#0066FF"
           ],
-          "color": "#0066FF",
           "filters": [
             {
               "id": "panel_product",
@@ -227,7 +214,6 @@
           "colors": [
             "#0066FF"
           ],
-          "color": "#0066FF",
           "filters": [
             {
               "id": "panel_product_pie",

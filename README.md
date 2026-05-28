@@ -267,14 +267,12 @@ Reports are `.rk.json` files in `reports/`. The `id` field must match the filena
   "data": [
     {
       "id": "total_revenue",
-      "type": "model",
       "model": "sales",
       "metrics": ["total_revenue"],
       "filterColumns": { "region": "region" }
     },
     {
       "id": "revenue_by_month",
-      "type": "model",
       "model": "sales",
       "sql": "SELECT substr(date, 1, 7) as month, SUM(revenue) as revenue FROM {{table}} WHERE true [[AND region = @region]] GROUP BY month ORDER BY month"
     }
@@ -316,7 +314,6 @@ Data blocks define queries that panels reference by `id`.
 ```json
 {
   "id": "revenue_kpi",
-  "type": "model",
   "model": "sales",
   "metrics": ["total_revenue", "total_units"],
   "dimensions": ["region"],
@@ -328,7 +325,6 @@ Data blocks define queries that panels reference by `id`.
 ```json
 {
   "id": "monthly_trend",
-  "type": "model",
   "model": "sales",
   "sql": "SELECT substr(date, 1, 7) as month, SUM(revenue) as revenue FROM {{table}} WHERE true [[AND region = @region]] GROUP BY month ORDER BY month"
 }

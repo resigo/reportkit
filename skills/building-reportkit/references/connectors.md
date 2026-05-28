@@ -74,7 +74,7 @@ Models reference a connection via the `connection` field:
 }
 ```
 
-Data blocks with `type: "sql"` can also target a connection directly via `"connection": "dwh-prod"`.
+Raw-SQL data blocks (no `model` field) can also target a connection directly via `"connection": "dwh-prod"`.
 
 ## Query routing
 

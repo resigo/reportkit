@@ -7,8 +7,7 @@ Data blocks define how panels get their data. Each block runs a query and is ref
 | Field | Type | Description |
 |-------|------|-------------|
 | `id` | string (required) | Unique block identifier, referenced by panels via `data` |
-| `type` | `"sql"` or `"model"` (required) | Block type |
-| `model` | string | Model id from `models/` (required when type is "model") |
+| `model` | string | Model id from `models/`. A block with `model` set is a model block; a block with only `sql` is a raw-SQL block. |
 | `sql` | string | SQL query – use `{{table}}` for the model's table name |
 | `connection` | string | Connection id for raw SQL blocks targeting a specific warehouse |
 | `select` | string[] | Declarative column list (builds `SELECT col1, col2 FROM {{table}}`) |
@@ -19,11 +18,11 @@ Data blocks define how panels get their data. Each block runs a query and is ref
 
 ## Writing data blocks
 
-- Set `type: "model"` and `model` to a model id from `models/`
+- Set `model` to a model id from `models/`
 - **Prefer metrics over raw SQL** when the model has approved metrics – use `metrics: ["metric_id"]` with optional `dimensions: ["dim_id"]`
 - Use `{{table}}` in SQL – replaced with the model's table name
 - For cross-source joins: `{{sources.<other_model_id>}}` references other tables
-- For raw SQL without a model: use `type: "sql"` with `connection`
+- For raw SQL without a model: omit `model` and set `connection`
 - `metrics` and `sql` are mutually exclusive – never set both
 
 ## Filters in SQL blocks
@@ -45,7 +44,6 @@ Metric blocks don't have raw SQL. Use `filterColumns` to map filter IDs to colum
 ```json
 {
   "id": "revenue_kpi",
-  "type": "model",
   "model": "orders",
   "metrics": ["total_revenue"],
   "filterColumns": { "country": "country", "date_range": "created_at" }
@@ -95,7 +93,7 @@ Create a `.rk-model.json` file in `models/`. The `id` must match the filename.
 
 Every column entry must be an object with a `name` and a `description`. `description` is required – set it to `""` if there is no useful context. `type` is optional but recommended: the column's data type (e.g. `date`, `string`, `number`, `boolean`). Bare-string entries like `"col3"` are not allowed.
 
-Every data block with `type: "model"` must reference a registered model. If no model exists for the data you need, create one first.
+When a data block sets a `model` field, it must reference a registered model. If no model exists for the data you need, create one first.
 
 ## Examples
 
@@ -103,7 +101,6 @@ Every data block with `type: "model"` must reference a registered model. If no m
 ```json
 {
   "id": "revenue_kpi",
-  "type": "model",
   "model": "orders",
   "metrics": ["total_revenue"],
   "filterColumns": { "region": "region" }
@@ -114,7 +111,6 @@ Every data block with `type: "model"` must reference a registered model. If no m
 ```json
 {
   "id": "revenue_by_status",
-  "type": "model",
   "model": "orders",
   "metrics": ["total_revenue", "order_count"],
   "dimensions": ["status"]
@@ -125,7 +121,6 @@ Every data block with `type: "model"` must reference a registered model. If no m
 ```json
 {
   "id": "monthly_trend",
-  "type": "model",
   "model": "orders",
   "sql": "SELECT date_trunc('month', created_at) as month, SUM(amount) as revenue FROM {{table}} WHERE true [[AND region = @region]] GROUP BY month ORDER BY month"
 }
@@ -135,7 +130,6 @@ Every data block with `type: "model"` must reference a registered model. If no m
 ```json
 {
   "id": "total_orders",
-  "type": "model",
   "model": "orders",
   "sql": "SELECT COUNT(*) as count FROM {{table}} WHERE true [[AND region = @region]]",
   "aggregate": { "count": "count" }

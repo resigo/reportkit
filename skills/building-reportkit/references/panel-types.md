@@ -287,7 +287,6 @@ Do not try to switch between multiple data blocks inside `render`; only one bloc
 ```jsonc
 {
   "id": "revenue_over_time",
-  "type": "model",
   "model": "stg_orders",
   "sql": "SELECT strftime(CASE WHEN @granularity = 'day' THEN DATE_TRUNC('day', ordered_at) WHEN @granularity = 'week' THEN DATE_TRUNC('week', ordered_at) ELSE DATE_TRUNC('month', ordered_at) END, '%Y-%m-%d') AS period, SUM(amount) AS revenue FROM {{table}} GROUP BY 1 ORDER BY 1"
 }

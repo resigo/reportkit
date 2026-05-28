@@ -16,7 +16,6 @@ Use `metrics` and `dimensions` arrays instead of raw SQL:
 ```json
 {
   "id": "revenue_kpi",
-  "type": "model",
   "model": "stg_orders",
   "metrics": ["total_revenue"],
   "filterColumns": { "region": "region" }
@@ -26,7 +25,6 @@ Use `metrics` and `dimensions` arrays instead of raw SQL:
 ```json
 {
   "id": "revenue_by_status",
-  "type": "model",
   "model": "stg_orders",
   "metrics": ["total_revenue", "order_count"],
   "dimensions": ["status"]
