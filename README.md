@@ -184,7 +184,13 @@ Models are registered data sources that describe a table, its columns, and optio
   "label": "Sales",
   "table": "sales",
   "description": "Product sales by region",
-  "columns": ["date", "region", "product", "units", "revenue"],
+  "columns": [
+    { "name": "date", "type": "date", "description": "Sale date" },
+    { "name": "region", "type": "string", "description": "Sales region (North/South/West)" },
+    { "name": "product", "type": "string", "description": "Product SKU" },
+    { "name": "units", "type": "number", "description": "Units sold" },
+    { "name": "revenue", "type": "number", "description": "Revenue in USD" }
+  ],
   "connection": "dwh-prod",
   "dimensions": [
     { "id": "product", "label": "Product", "column": "product" },
