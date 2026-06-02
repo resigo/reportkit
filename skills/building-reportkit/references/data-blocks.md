@@ -86,12 +86,14 @@ Create a `.rk-model.json` file in `models/`. The `id` must match the filename.
   "description": "What this source contains",
   "columns": [
     { "name": "col1", "type": "date", "description": "Description of col1" },
-    { "name": "col2", "type": "number", "description": "Description of col2" }
+    { "name": "mrr_eur", "label": "MRR (EUR)", "type": "number", "description": "Monthly recurring revenue" }
   ]
 }
 ```
 
 Every column entry must be an object with a `name` and a `description`. `description` is required – set it to `""` if there is no useful context. `type` is optional but recommended: the column's data type (e.g. `date`, `string`, `number`, `boolean`). Bare-string entries like `"col3"` are not allowed.
+
+`label` is optional: the human-readable display name for that column. It becomes the default header in DataTables and the default series name in chart legends, everywhere the column appears – without changing the SQL column name. A panel's `labels` map overrides it per panel. **This is how you get readable column names: set `label` on the model column (or `labels` on the panel) – never alias columns in SQL to a name with spaces/parens, which breaks on warehouses like BigQuery.**
 
 When a data block sets a `model` field, it must reference a registered model. If no model exists for the data you need, create one first.
 

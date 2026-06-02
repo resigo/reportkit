@@ -1,4 +1,4 @@
-# ReportKit
+# <img src="logo.svg" alt="" height="28" align="top"> ReportKit
 
 [![Status: Beta](https://img.shields.io/badge/status-beta-orange)](https://github.com/resigo/reportkit/issues)
 

@@ -1,10 +1,16 @@
 ---
 name: building-reportkit
-description: "REQUIRED before ANY change to .rk.json, .rk-model.json, .rk-conn.json, or .rk-theme.json files. Also use when asked to create or edit dashboards, reports, charts, KPIs, data tables, connections, models, or data visualizations. Always invoke this skill FIRST – read its workflow and rules before making changes."
+description: "REQUIRED before ANY change to, or debugging of, .rk.json, .rk-model.json, .rk-conn.json, or .rk-theme.json files. Also use when asked to create, edit, fix, or extend dashboards, reports, charts, KPIs, data tables, connections, models, or data visualizations. Always invoke this skill FIRST – read its workflow and the Scope rule before making changes. You build reports only by editing these JSON files; you never edit ReportKit's own code."
 user-invocable: true
 ---
 
 # Build ReportKit Reports
+
+## Scope
+
+You build and fix reports **only** by editing this project's files: `reports/*.rk.json`, `models/*.rk-model.json`, `connections/*.rk-conn.json`, `themes/*.rk-theme.json`, seeds, and dbt models. ReportKit's own code (its server, frontend, CLI, and `@reportkit/*` packages) is off-limits – never edit it or reimplement it in application code.
+
+If a request seems to need a feature ReportKit doesn't have, **stop and tell the user it's a framework limitation** rather than editing the product or building your own version. But check the references first – the feature often exists. For example, to make column names human-readable, set a `label` on the model column or `labels` on the panel (see `references/panel-types.md`); never alias columns in SQL to a name with spaces or parentheses, which breaks on warehouses like BigQuery.
 
 ## Project structure
 
@@ -88,8 +94,7 @@ See `references/diagnostics.md` for response format and issue categories.
 
 ## Rules
 
-- Only modify `.rk.json`, `.rk-model.json`, `.rk-conn.json`, `.rk-theme.json`, seeds, and dbt models
-- Never modify ReportKit server or frontend source code
+- **Scope (see top):** only ever edit this project's `.rk.json` / `.rk-model.json` / `.rk-conn.json` / `.rk-theme.json` files, seeds, and dbt models. Never edit or reimplement ReportKit's server, frontend, CLI, or `@reportkit/*` packages – if a task seems to need that, stop and tell the user it's a framework limitation.
 - Write SQL in the dialect of the target warehouse
 - Connection files contain credentials – never log or expose them
 - Never guess dataset/schema names – use `GET /api/data/search-tables?q=<pattern>` to discover them

@@ -47,17 +47,17 @@ Trends over time. Supports multiple series, long-format colorBy, and dual Y-axis
 | Field | Type | Required | Description |
 |-------|------|:--------:|-------------|
 | `x` | string | Yes | Category/time column for x-axis |
-| `y` | string \| string[] | Yes | Value column(s). Array for wide-format multi-line |
-| `colorBy` | string | | Long-format multi-series: one line per unique value. Takes precedence over y[] |
-| `y2` | string \| string[] | | Secondary Y-axis (dashed lines, independent right-side scale) |
-| `yLabels` | string[] | | Legend labels for y series |
-| `y2Labels` | string[] | | Legend labels for y2 series |
 | `xFormat` | string | | d3-time-format specifier for x-axis labels, e.g. `"%Y-%m"`, `"W%V"` (ISO week), `"%b %Y"` |
-| `color` | string | | Line color (single-line only; multi-line uses palette) |
+| `xLabel` | string | | Title below the x-axis |
+| `y` | string \| string[] | Yes | Value column(s). Array for wide-format multi-line |
 | `yFormat` | string | | d3-format specifier, e.g. `"$,.0f"`, `".0%"`, `"~s"` |
-| `referenceLines` | ReferenceLine[] | | `[{ y: 500, label: "target", style: "dashed" }]` |
-| `xLabel` / `yLabel` | string | | Axis titles |
+| `yLabel` | string | | Title beside the y-axis |
 | `yDomain` | [number, number] | | Override y-axis range |
+| `y2` | string \| string[] | | Secondary Y-axis (dashed lines, independent right-side scale) |
+| `colorBy` | string | | Long-format multi-series: one line per unique value. Takes precedence over y[] |
+| `labels` | Record<string,string> | | Display labels keyed by column name, e.g. `{ "mrr_eur": "MRR (EUR)" }`. Overrides the model column `label`; applies to legend/series names. Set labels here instead of aliasing columns in SQL. |
+| `colors` | string[] | | Series colors, index-aligned with the lines. Single line: `["#2563eb"]`. Multi-line uses the theme palette unless overridden. |
+| `referenceLines` | ReferenceLine[] | | `[{ y: 500, label: "target", style: "dashed" }]` |
 | `showLegend` | boolean | | Show/hide legend (default: true) |
 
 | chartStyle field | Type | Default | Description |
@@ -78,15 +78,17 @@ Vertical bars for categorical comparison. Single series, grouped, or stacked.
 | Field | Type | Required | Description |
 |-------|------|:--------:|-------------|
 | `x` | string | Yes | Category column |
-| `y` | string \| string[] | Yes | Value column(s). Array for multi-series |
-| `stack` | boolean | | When true + y array, render stacked bars (default: false) |
-| `yLabels` | string[] | | Legend labels for multi-series |
 | `xFormat` | string | | d3-time-format specifier for x-axis labels |
-| `color` | string | | Bar fill (single series only) |
+| `xLabel` | string | | Title below the x-axis |
+| `y` | string \| string[] | Yes | Value column(s). Array for multi-series |
 | `yFormat` | string | | d3-format specifier |
-| `referenceLines` | ReferenceLine[] | | Threshold lines |
-| `xLabel` / `yLabel` | string | | Axis titles |
+| `yLabel` | string | | Title beside the y-axis |
 | `yDomain` | [number, number] | | Override y-axis range |
+| `y2` | string \| string[] | | Secondary Y-axis (dashed line overlay, independent right-side scale) |
+| `stack` | boolean | | When true + y array, render stacked bars (default: false) |
+| `labels` | Record<string,string> | | Display labels keyed by column name (overrides the model column `label`; for legend/series names). Set labels instead of aliasing in SQL. |
+| `colors` | string[] | | Bar colors, index-aligned with series. Single series: `["#2563eb"]`. |
+| `referenceLines` | ReferenceLine[] | | Threshold lines |
 | `showLegend` | boolean | | Show/hide legend (default: true) |
 | `sort` | "asc" \| "desc" \| "none" | | Sort bars by value |
 
@@ -105,16 +107,17 @@ Area chart with gradient fill. Supports multi-series, stacking, and long-format 
 | Field | Type | Required | Description |
 |-------|------|:--------:|-------------|
 | `x` | string | Yes | Category/time column |
+| `xFormat` | string | | d3-time-format specifier for x-axis labels |
+| `xLabel` | string | | Title below the x-axis |
 | `y` | string \| string[] | Yes | Value column(s). Array for wide-format multi-series. Used as value column when colorBy is set. |
-| `yLabels` | string[] | | Legend labels for multi-series |
+| `yFormat` | string | | d3-format specifier |
+| `yLabel` | string | | Title beside the y-axis |
+| `yDomain` | [number, number] | | Override y-axis range |
 | `colorBy` | string | | Long-format multi-series: group by this column, one area per group |
 | `stack` | boolean \| string | | `true` for stacked multi-y areas. String pivots long-format data by that column. |
-| `xFormat` | string | | d3-time-format specifier for x-axis labels |
-| `color` | string | | Area color (single series; multi-series uses palette) |
-| `yFormat` | string | | d3-format specifier |
+| `labels` | Record<string,string> | | Display labels keyed by column name (overrides the model column `label`; for legend/series names). Set labels instead of aliasing in SQL. |
+| `colors` | string[] | | Area colors, index-aligned with series. Single series: `["#2563eb"]`. |
 | `referenceLines` | ReferenceLine[] | | Threshold lines |
-| `xLabel` / `yLabel` | string | | Axis titles |
-| `yDomain` | [number, number] | | Override y-axis range |
 | `showLegend` | boolean | | Show/hide legend (default: true) |
 
 | chartStyle field | Type | Default | Description |
@@ -134,15 +137,17 @@ Scatter plot for correlation. Supports colorBy and bubble sizing.
 | Field | Type | Required | Description |
 |-------|------|:--------:|-------------|
 | `x` | string | Yes | Numeric column for x-axis |
-| `y` | string | Yes | Numeric column for y-axis |
-| `colorBy` | string | | Categorical color encoding per unique value |
-| `color` | string | | Uniform point color (ignored when colorBy set) |
-| `size` | string | | Numeric column for bubble size |
 | `xFormat` | string | | d3-format for x-axis |
+| `xLabel` | string | | Title below the x-axis |
+| `xDomain` | [number, number] | | Override x-axis range |
+| `y` | string | Yes | Numeric column for y-axis |
 | `yFormat` | string | | d3-format for y-axis |
+| `yLabel` | string | | Title beside the y-axis |
+| `yDomain` | [number, number] | | Override y-axis range |
+| `colorBy` | string | | Categorical color encoding per unique value |
+| `size` | string | | Numeric column for bubble size |
+| `colors` | string[] | | Point colors, index-aligned with colorBy groups. Uniform color: `["#2563eb"]` (ignored when colorBy is set). |
 | `referenceLines` | ReferenceLine[] | | Threshold lines |
-| `xLabel` / `yLabel` | string | | Axis titles |
-| `xDomain` / `yDomain` | [number, number] | | Override axis range |
 | `showLegend` | boolean | | Show/hide legend (default: true) |
 
 | chartStyle field | Type | Default | Description |
@@ -188,14 +193,15 @@ Horizontal bars, auto-sorts descending. Good for rankings/leaderboards.
 | Field | Type | Required | Description |
 |-------|------|:--------:|-------------|
 | `x` | string | Yes | Value column (bar length) – numeric |
-| `y` | string | Yes | Category column (bar labels) |
-| `color` | string | | Bar fill color |
-| `limit` | number | | Max bars shown (default: 10) |
-| `yFormat` | string | | d3-format for bar values |
-| `referenceLines` | ReferenceLine[] | | Vertical reference lines |
-| `xLabel` / `yLabel` | string | | Axis titles |
+| `xLabel` | string | | Title below the x-axis (value axis) |
 | `xDomain` | [number, number] | | Override value axis range |
+| `y` | string | Yes | Category column (bar labels) |
+| `yFormat` | string | | d3-format for bar values |
+| `yLabel` | string | | Title beside the y-axis (category axis) |
+| `colors` | string[] | | Bar color: `["#2563eb"]`. |
+| `referenceLines` | ReferenceLine[] | | Vertical reference lines |
 | `sort` | "asc" \| "desc" \| "none" | | Sort order (default: "desc") |
+| `limit` | number | | Max bars shown (default: 10) |
 
 | chartStyle field | Type | Default | Description |
 |------------------|------|---------|-------------|
@@ -215,8 +221,8 @@ Heatmap grid for cohort retention analysis.
 | `x` | string | Yes | Period column (numeric) |
 | `y` | string | Yes | Cohort column (group label) |
 | `value` | string | Yes | Cell intensity (0-100) |
-| `color` | string | | Heatmap accent color |
 | `formatValue` | string | | d3-format for cell values |
+| `colors` | string[] | | Heatmap accent: `["#2563eb"]`. |
 
 One row per cohort+period combination. Value interpreted as percentage 0-100.
 
@@ -321,9 +327,10 @@ Single-number summary. Pair with `aggregate` in the data block.
 | Field | Type | Required | Description |
 |-------|------|:--------:|-------------|
 | `value` | string | Yes | Column name for displayed value |
+| `formatValue` | string | | d3-format specifier |
 | `unit` | string | | Unit label – `"$"` renders before value |
 | `subtitle` | string | | Context text below value (don't repeat title) |
-| `formatValue` | string | | d3-format specifier |
+| `colors` | string[] | | Accent color for the value. `colors[0]` is used, e.g. `["#2563eb"]`. There is no `color` field. |
 
 | kpiStyle field | Type | Default | Description |
 |----------------|------|---------|-------------|
@@ -338,7 +345,10 @@ Sortable, paginated data table.
 | Field | Type | Required | Description |
 |-------|------|:--------:|-------------|
 | `columns` | string[] | | Column whitelist (omit for all) |
+| `labels` | Record<string,string> | | Header display labels keyed by column name, e.g. `{ "principal_outstanding_eur": "Principal Outstanding (EUR)" }`. Overrides the model column `label`. |
 | `limit` | number | | Max rows loaded (default: 100) |
+
+> **Human-readable headers:** set `labels` (or a `label` on the model column) – do **not** alias columns in SQL (`SELECT x AS "Nice Name"`). Aliasing to a label with spaces/parens fails on warehouses like BigQuery, whose identifiers must be plain. Labels are presentation; SQL column names stay clean `snake_case`.
 
 | tableStyle field | Type | Default | Description |
 |------------------|------|---------|-------------|
@@ -391,7 +401,7 @@ Image panel. No `data` field needed.
 
 | Field | Type | Description |
 |-------|------|-------------|
-| `colors` | string[] | Per-series color overrides (index-aligned with y[]) |
+| `colors` | string[] | Series/accent colors, index-aligned with the series (`y[]`). `colors[0]` is the single-series color and the KPICard accent. Set a single color with `["#2563eb"]`. There is no singular `color` field on panels. |
 | `xFormat` | string | d3-format for x-axis (numeric axes only) |
 | `yFormat` | string | d3-format for y-axis |
 | `formatValue` | string | d3-format for displayed values |
