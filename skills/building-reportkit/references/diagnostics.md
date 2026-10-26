@@ -84,7 +84,7 @@ The squeeze warnings (`legend_*`, `axis_labels_overlap`, `y_ticks_crowded`) put 
 
 **Data** – query output won't render as intended (requires materialization):
 - **excessive_rows** – a block returned a very large result set (likely a missing GROUP BY or bad join). Aggregate or LIMIT.
-- **y_not_numeric / kpi_not_numeric** – a y / KPI value column isn't numeric. Cast it in SQL or point at a numeric column.
+- **y_not_numeric / kpi_not_numeric** – a chart value column (`y`; `x` for HorizontalBarChart) or KPI value column isn't numeric. Cast it in SQL or point at a numeric column.
 - **kpi_multiple_rows** – a KPI block returns more than one row (only the first shows). Aggregate or LIMIT 1.
 - **single_row_chart** – a chart block returned a single row. Remove the aggregate/LIMIT or add a GROUP BY.
 - **filter_options_empty** – a filter's options query returned nothing (dropdown shows only "All"). Check the query.
@@ -112,6 +112,6 @@ When something is wrong (charts show "No data", panels look broken, etc.), **alw
 After health returns `healthy: true`, verify:
 - Every panel's x/y/value field matches a column in the data block's result
 - Sample data matches what was asked for
-- Filters are used: each filter ID appears in at least one data block's SQL (`@filter_id`) or `filters` list
+- Filters are used: each filter ID appears in at least one data block's SQL (`@filter_id`) or a metric block's `filterColumns`
 - KPI cards have single-row results (use aggregate or LIMIT 1)
 - No double aggregation: if SQL has GROUP BY, don't also set `aggregate`

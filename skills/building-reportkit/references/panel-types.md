@@ -5,7 +5,7 @@
 | Type | Category | Description | Data required |
 |------|----------|-------------|:---:|
 | `LineChart` | Chart | Trends over time, multi-series, dual Y-axis | Yes |
-| `BarChart` | Chart | Categorical comparison, grouped/stacked | Yes |
+| `BarChart` | Chart | Categorical comparison, grouped/stacked, colorBy | Yes |
 | `AreaChart` | Chart | Area with gradient fill, multi-series, stacking, colorBy | Yes |
 | `ScatterChart` | Chart | Correlation between two numeric values, bubble sizing | Yes |
 | `PieChart` | Chart | Proportions and part-to-whole | Yes |
@@ -85,7 +85,8 @@ Vertical bars for categorical comparison. Single series, grouped, or stacked.
 | `yLabel` | string | | Title beside the y-axis |
 | `yDomain` | [number, number] | | Override y-axis range |
 | `y2` | string \| string[] | | Secondary Y-axis (dashed line overlay, independent right-side scale) |
-| `stack` | boolean | | When true + y array, render stacked bars (default: false) |
+| `colorBy` | string | | Long-format multi-series: one bar per unique value, grouped side by side. Add `stack: true` to stack them |
+| `stack` | boolean \| string | | `true` stacks multi-series bars (y array or colorBy). String pivots long-format data by that column into stacked bars (default: false) |
 | `labels` | Record<string,string> | | Display labels keyed by column name (overrides the model column `label`; for legend/series names). Set labels instead of aliasing in SQL. |
 | `colors` | string[] | | Bar colors, index-aligned with series. Single series: `["#2563eb"]`. |
 | `referenceLines` | ReferenceLine[] | | Threshold lines |
@@ -95,8 +96,11 @@ Vertical bars for categorical comparison. Single series, grouped, or stacked.
 | chartStyle field | Type | Default | Description |
 |------------------|------|---------|-------------|
 | `barRadius` | number | 4 | Corner radius of bars |
+| `strokeWidth` | number | 2 | Y2 overlay line thickness |
 | `showGrid` | boolean | true | Horizontal grid lines |
 | `showValues` | boolean | false | Value labels above bars |
+
+Multi-series: (1) `y: string[]` – wide-format, grouped bars; (2) `colorBy` – long-format with GROUP BY, grouped bars; (3) `stack: "column_name"` – long-format pivoted into stacked bars. Add `stack: true` to stack (1) or (2).
 
 ---
 
@@ -166,6 +170,7 @@ Donut/pie chart for proportions.
 | `label` | string | Yes | Category names (slice labels) |
 | `value` | string | Yes | Numeric values (slice size) |
 | `formatValue` | string | | d3-format specifier |
+| `colors` | string[] | | Slice colors, index-aligned with rows. Omitted slices use the theme palette. |
 | `showLegend` | boolean | | Show legend (default: true) |
 
 One row per category. Center displays total or hovered value.
@@ -181,6 +186,7 @@ Conversion pipeline with drop-off between stages.
 | `label` | string | Yes | Stage names |
 | `value` | string | Yes | Numeric counts per stage |
 | `formatValue` | string | | d3-format specifier |
+| `colors` | string[] | | Stage colors, index-aligned with rows. Omitted stages use the theme palette. |
 
 One row per stage, ordered widest (top) to narrowest (bottom). First row = 100%.
 
@@ -402,7 +408,7 @@ Image panel. No `data` field needed.
 | Field | Type | Description |
 |-------|------|-------------|
 | `colors` | string[] | Series/accent colors, index-aligned with the series (`y[]`). `colors[0]` is the single-series color and the KPICard accent. Set a single color with `["#2563eb"]`. There is no singular `color` field on panels. |
-| `xFormat` | string | d3-format for x-axis (numeric axes only) |
+| `xFormat` | string | x-axis label format: d3-time-format for time/category axes (LineChart, BarChart, AreaChart, e.g. `"%b %Y"`), d3-format for numeric axes (ScatterChart) |
 | `yFormat` | string | d3-format for y-axis |
 | `formatValue` | string | d3-format for displayed values |
 

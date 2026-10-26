@@ -68,7 +68,6 @@ See `references/diagnostics.md` for response format and issue categories.
   "title": "Report Title",
   "description": "What this report shows",
   "theme": "default",
-  "reviewMode": true,
   "filters": [ /* see references/filters.md */ ],
   "data": [ /* see references/data-blocks.md */ ],
   "pages": [

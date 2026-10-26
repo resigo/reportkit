@@ -107,7 +107,7 @@
     {
       "id": "detail",
       "model": "demo_sales",
-      "sql": "SELECT date as Date, region as Region, product as Product, units as Units, revenue as Revenue FROM {{table}} WHERE true [[AND region = @region]] [[AND date >= @date_range.start AND date <= @date_range.end]] ORDER BY date DESC"
+      "sql": "SELECT date, region, product, units, revenue FROM {{table}} WHERE true [[AND region = @region]] [[AND date >= @date_range.start AND date <= @date_range.end]] ORDER BY date DESC"
     }
   ],
   "pages": [
@@ -167,6 +167,7 @@
           "data": "avg_price",
           "value": "avg_price",
           "unit": "$",
+          "formatValue": ",.2f",
           "row": 3,
           "col": 13,
           "span": 6,
@@ -211,9 +212,6 @@
           "col": 15,
           "span": 10,
           "height": 10,
-          "colors": [
-            "#0066FF"
-          ],
           "filters": [
             {
               "id": "panel_product_pie",
@@ -271,6 +269,16 @@
       "title": "Product Analysis",
       "layout": [
         {
+          "id": "products_title",
+          "type": "Title",
+          "title": "Product Analysis",
+          "level": 1,
+          "row": 1,
+          "col": 1,
+          "span": 12,
+          "height": 3
+        },
+        {
           "id": "product_rank",
           "type": "HorizontalBarChart",
           "title": "Product Ranking",
@@ -279,7 +287,7 @@
           "y": "product",
           "row": 4,
           "col": 1,
-          "span": 10,
+          "span": 9,
           "height": 10,
           "chartStyle": {
             "showValues": true
@@ -294,8 +302,8 @@
           "y": "revenue",
           "colorBy": "product",
           "row": 4,
-          "col": 11,
-          "span": 14,
+          "col": 10,
+          "span": 15,
           "height": 10,
           "chartStyle": {
             "pointRadius": 6
@@ -348,16 +356,6 @@
           "col": 1,
           "span": 24,
           "height": 11
-        },
-        {
-          "id": "panel_kv23mr",
-          "row": 1,
-          "col": 1,
-          "span": 12,
-          "height": 3,
-          "type": "Title",
-          "title": "Products Analysis",
-          "level": 1
         }
       ]
     }

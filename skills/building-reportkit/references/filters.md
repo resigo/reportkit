@@ -11,7 +11,7 @@ Filters are interactive controls that expand to **values** in SQL. You control W
 | `daterange` | Date range picker | `"__all__"` | `@filter.start` / `@filter.end` |
 | `range` | Numeric slider | `"__all__"` | `@filter.min` / `@filter.max` |
 | `text` | Free text input | `"__all__"` | `'value'` |
-| `toggle` | On/off toggle | `"__all__"` | `'true'` or `'false'` |
+| `toggle` | On/off toggle | `"__all__"` (off) | `'true'` when on; clause removed when off |
 
 ## Filter fields
 

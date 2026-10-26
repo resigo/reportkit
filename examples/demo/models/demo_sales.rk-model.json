@@ -43,8 +43,9 @@
     {
       "id": "avg_price",
       "label": "Avg Price",
-      "type": "aggregate",
-      "expression": "ROUND(SUM(revenue) * 1.0 / SUM(units), 2)",
+      "type": "ratio",
+      "numerator": "SUM(revenue)",
+      "denominator": "SUM(units)",
       "format": "currency",
       "unit": "$",
       "status": "approved"

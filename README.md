@@ -10,7 +10,7 @@ ReportKit turns JSON files into interactive dashboards – built and maintained 
 
 ## Key Features
 
-- **Agent-native** – Built-in skill files for Claude Code so agents can create and edit reports
+- **Agent-native** – Built-in skill files for Claude Code and Codex so agents can create and edit reports
 - **File-based** – Reports, models, themes, and connections are plain JSON files in your repo
 - **Multi-warehouse** – BigQuery, DuckDB, Postgres, or CSV seeds with zero setup (Snowflake coming soon)
 - **Hot-reload** – Save a file, see changes instantly in the browser
@@ -360,7 +360,7 @@ Add more entries to `pages` for tabbed dashboards:
 | Type | Description | Key Props |
 |------|-------------|-----------|
 | `LineChart` | Time-series line chart with multi-series, colorBy, dual Y-axis | `x`, `y`, `colorBy`, `y2` |
-| `BarChart` | Vertical bars – grouped or stacked multi-series | `x`, `y`, `stack` |
+| `BarChart` | Vertical bars – grouped or stacked multi-series | `x`, `y`, `colorBy`, `stack` |
 | `AreaChart` | Filled area chart – multi-series, stacking, colorBy | `x`, `y`, `colorBy`, `stack` |
 | `HorizontalBarChart` | Horizontal ranked bars | `x` (value), `y` (category) |
 | `ScatterChart` | Scatter with categorical color encoding | `x`, `y`, `colorBy` |
@@ -433,7 +433,7 @@ Filters add interactive controls to your report. They expand to **values** in SQ
 | `daterange` | Date range picker – use `@filter.start` and `@filter.end` | `"__all__"` or `"start,end"` |
 | `range` | Numeric slider – use `@filter.min` and `@filter.max` | `"__all__"` or `"min,max"` |
 | `text` | Free text input | `"__all__"` |
-| `toggle` | On/off toggle | `"true"` or `"false"` |
+| `toggle` | On/off toggle – `@filter` is `'true'` when on; the clause is removed when off | `"__all__"` (off) |
 
 Place `@filter_id` references in SQL WHERE clauses. Wrap in `[[...]]` for optional filtering – the clause is removed when the filter is `__all__`. Set `"excludeNull": true` on a dropdown to hide null values.
 
@@ -474,16 +474,18 @@ Create a `.rk-theme.json` in `themes/` and reference it by name in your report's
 | Field | Options |
 |-------|---------|
 | `accent` | Primary UI color (hex) |
+| `background` | Page background color (hex) |
 | `palette` | Chart series colors (cycled in order) |
 | `panel.border` | `none`, `subtle`, `visible` |
 | `panel.radius` | `none`, `small`, `medium` |
-| `charts` | `strokeWidth`, `pointRadius`, `fillOpacity`, `barRadius`, `showGrid`, `showDots`, `showValues` |
+| `charts` | `strokeWidth`, `pointRadius`, `fillOpacity`, `barRadius`, `showGrid`, `showDots`, `showValues`, `margins`, `labelAngle` |
 | `table` | `compact`, `striped`, `pageSize` |
 | `kpi.valueSize` | `sm`, `md`, `lg`, `xl` |
 | `accents` | Per-panel-type accent override – e.g. `{ "KPICard": "#000000" }` |
 | `palettes` | Per-panel-type palette override – e.g. `{ "BarChart": ["#0066FF", "#7C3AED"] }` |
 | `mode` | `light` or `dark` |
 | `nav.position` | `left` or `top` |
+| `pageRows` | Rows per page before panels overflow (default `52`) |
 
 ## Agent Setup
 
@@ -506,14 +508,14 @@ This copies the full skill (including reference docs) to `.claude/skills/buildin
 
 **Agent panel (recommended)** – open the sidebar in ReportKit and type a prompt. The panel runs the agent in the background and streams output inline.
 
-**Terminal** – point your agent at the `building-reportkit` skill and give it a prompt:
+**Terminal** – run your agent from the project folder and give it a prompt. Both agents discover the installed `building-reportkit` skill automatically (in Claude Code you can also invoke it explicitly with `/building-reportkit`):
 
 ```bash
 # Claude Code
-claude --skill building-reportkit "add a bar chart of revenue by month"
+claude "add a bar chart of revenue by month"
 
 # Codex
-codex --instructions .agents/skills/building-reportkit/SKILL.md "add a bar chart of revenue by month"
+codex "add a bar chart of revenue by month"
 ```
 
 ## Deploying
@@ -527,19 +529,22 @@ codex --instructions .agents/skills/building-reportkit/SKILL.md "add a bar chart
 ```dockerfile
 FROM node:20-slim
 WORKDIR /app
-COPY package*.json ./
-RUN npm ci
 COPY . .
+# Install the drivers your connections use (bigquery, duckdb, postgres)
+RUN npx -y @reportkit/cli install bigquery
 EXPOSE 3001
-CMD ["npx", "@reportkit/cli", "serve"]
+CMD ["npx", "-y", "@reportkit/cli", "serve"]
 ```
+
+Add `.reportkit/` to your `.dockerignore` so drivers installed on your machine aren't copied into the image.
 
 Pass secrets as environment variables:
 
 ```bash
 docker run -p 3001:3001 \
   -e BIGQUERY_PROJECT=my-gcp-project \
-  -e BIGQUERY_KEY_FILE=/run/secrets/sa.json \
+  -e GOOGLE_APPLICATION_CREDENTIALS=/run/secrets/sa.json \
+  -v "$PWD/sa.json:/run/secrets/sa.json:ro" \
   my-reportkit-image
 ```
 
